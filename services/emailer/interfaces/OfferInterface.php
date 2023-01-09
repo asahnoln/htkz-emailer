@@ -1,4 +1,5 @@
 <?php
+
 namespace app\services\emailer\interfaces;
 
 use yii\mail\MessageInterface;

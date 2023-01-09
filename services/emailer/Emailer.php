@@ -7,7 +7,6 @@ use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\interfaces\OfferInterface;
 use yii\mail\MailerInterface;
 use yii\mail\MessageInterface;
-use yii\symfonymailer\Message;
 
 class Emailer
 {
