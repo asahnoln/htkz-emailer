@@ -61,7 +61,7 @@ class AmplitudeTest extends \Codeception\Test\Unit
         verify($a)->instanceOf(AnalyticsInterface::class);
         verify($result)->true();
     }
-    
+
     public function testReturnFalseOnBadCode(): void
     {
         $url = 'http://testurl.com';
