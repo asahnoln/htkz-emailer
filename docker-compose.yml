@@ -1,0 +1,48 @@
+version: "2"
+services:
+  # Main PHP container
+  php:
+    image: yiisoftware/yii2-php:8.1-apache
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./:/app:delegated
+    ports:
+      - "8000:80"
+  # DB for prod and test
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./docker/data:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=verysecret
+      - MYSQL_DATABASE=yii2basic
+      - MYSQL_USER=yii2basic
+      - MYSQL_PASSWORD=secret
+  mysql_test:
+    image: mysql:5.7
+    volumes:
+      - ./docker/data_test:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=verysecret
+      - MYSQL_DATABASE=yii2basic_test
+      - MYSQL_USER=yii2basic
+      - MYSQL_PASSWORD=secret
+  # PhpMyAdmin for prod and test
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8001:80"
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+    depends_on:
+      - mysql
+  phpmyadmin_test:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8002:80"
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql_test
+    depends_on:
+      - mysql_test
