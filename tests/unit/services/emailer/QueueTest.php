@@ -87,7 +87,7 @@ class QueueStoreStub implements QueueStoreInterface
         if ($this->empty) {
             return null;
         }
-        
+
         return array_pop($this->preparedQueue);
     }
 }

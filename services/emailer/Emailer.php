@@ -32,7 +32,7 @@ class Emailer
         $message->setTo($email);
 
         if ($this->mailer->send($message)) {
-            $this->analytics->send('testId');
+            $this->analytics->send($id);
             return true;
         }
 
