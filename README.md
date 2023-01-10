@@ -12,6 +12,8 @@
 
 ## Тестирование
 
+Основные классы тестирования находятся в `tests/unit/services/emailer`.
+
 ```fish
 docker-compose run --rm php vendor/bin/codecept run
 ```
