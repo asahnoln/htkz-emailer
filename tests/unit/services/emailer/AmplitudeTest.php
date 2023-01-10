@@ -1,6 +1,6 @@
 <?php
 
-namespace services;
+namespace tests\unit\services\emailer;
 
 use Codeception\Stub\Expected;
 use app\services\emailer\Amplitude;

@@ -1,6 +1,6 @@
 <?php
 
-namespace services;
+namespace tests\unit\services\emailer;
 
 use Yii;
 use app\services\emailer\db\DbOffer;
@@ -45,9 +45,11 @@ class DbOfferTest extends \Codeception\Test\Unit
 
         $a = new DbOffer();
 
-        $result = $a->findAndCompose('2');
+        $result = $a->find('2');
 
         verify($a)->instanceOf(OfferInterface::class);
-        verify($result->getSubject())->equals('test offer 2');
+        verify($result->title)->equals('test offer 2');
+        // TODO: Content from API
+        // verify($result->content)->equals('test offer 2');
     }
 }

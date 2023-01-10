@@ -2,14 +2,13 @@
 
 namespace app\services\emailer\db;
 
+use app\services\emailer\OfferMessage;
 use app\services\emailer\interfaces\OfferInterface;
 use yii\db\Query;
-use yii\mail\MessageInterface;
-use yii\symfonymailer\Message;
 
 class DbOffer implements OfferInterface
 {
-    public function findAndCompose(string $city): MessageInterface
+    public function find(string $city): OfferMessage
     {
         $offer = (new Query())
             ->select(['title', 'priority'])
@@ -19,9 +18,7 @@ class DbOffer implements OfferInterface
             ->orderBy(['priority' => SORT_DESC])
             ->one();
 
-        $m = new Message();
-        $m->setSubject($offer['title']);
 
-        return $m;
+        return (new OfferMessage($offer['title'], 'content'));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace services;
+namespace tests\unit\services\emailer;
 
 use Yii;
 use app\services\emailer\Subscriber;

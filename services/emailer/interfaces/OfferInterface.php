@@ -2,9 +2,9 @@
 
 namespace app\services\emailer\interfaces;
 
-use yii\mail\MessageInterface;
+use app\services\emailer\OfferMessage;
 
 interface OfferInterface
 {
-    public function findAndCompose(string $city): MessageInterface;
+    public function find(string $city): OfferMessage;
 }
