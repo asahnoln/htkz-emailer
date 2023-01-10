@@ -1,3 +1,58 @@
+Рассылка писем
+==============
+
+## Запуск команды
+
+```fish
+# WIP
+```
+
+Разработка
+==========
+
+## Тестирование
+
+```fish
+docker-compose run --rm php vendor/bin/codecept run
+```
+
+## Объекты
+
+Все основные объекты находятся в `services/emailer`.
+
+### Emailer
+
+### Queue
+
+### QueueMessage
+
+### Subscriber
+
+### OfferMessage
+
+## Интерфейсы и реализации
+
+Все интерфейсы располагаются в `services/emailer/interfaces`.
+
+### AnalyticsInterace
+
+#### app\services\emailer\Amplitude
+
+### AudienceInterface
+
+#### app\services\emailer\db\DbAudience
+
+### OfferInterface
+
+#### app\services\emailer\db\DbAudience
+
+### QueueStoreInterface
+
+#### WIP
+
+YII INFO
+========
+
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
