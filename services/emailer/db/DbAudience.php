@@ -16,7 +16,7 @@ class DbAudience implements AudienceInterface
         $items = (new Query())
             ->select(['id', 'email'])
             ->from('tbl_mail')
-            ->where(['city' => $city])
+            ->where(['city' => $city, 'active' => 1, 'del' => 0])
             ->all();
 
         $subs = [];
