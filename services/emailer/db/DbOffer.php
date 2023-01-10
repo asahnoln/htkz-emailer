@@ -11,12 +11,13 @@ class DbOffer implements OfferInterface
 {
     public function findAndCompose(string $city): MessageInterface
     {
-        $offer = (new Query)
-        ->select(['title', 'priority'])
-        ->from('tbl_post_original')
-        ->where(['city_id' => $city])
-        ->one();
-        
+        $offer = (new Query())
+            ->select(['title', 'priority'])
+            ->from('tbl_post_original')
+            ->where(['city_id' => $city])
+            ->orderBy(['priority' => SORT_DESC])
+            ->one();
+
         $m = new Message();
         $m->setSubject($offer['title']);
 

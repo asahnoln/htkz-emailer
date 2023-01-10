@@ -17,6 +17,7 @@ class Amplitude implements AnalyticsInterface
             'api_key' => $this->key,
             'events' => [
                 [
+                    'event_type' => 'email send',
                     'device_id' => 'mail_'.$id,
                     'event_properties' => [
                         'type' => 'mailing',

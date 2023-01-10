@@ -34,6 +34,7 @@ class AmplitudeTest extends \Codeception\Test\Unit
                 verify($data['api_key'])->equals('secretKey');
                 verify($data['events'])->equals([
                     [
+                        'event_type' => 'email send',
                         'device_id' => 'mail_testAmplitudeId',
                         'event_properties' => [
                             'type' => 'mailing',

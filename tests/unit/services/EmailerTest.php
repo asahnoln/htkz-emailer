@@ -26,6 +26,7 @@ class EmailerTest extends \Codeception\Test\Unit
     {
     }
 
+    // TODO: Save to DB first, then send
     // tests
     public function testSendsOfferToAudience(): void
     {
