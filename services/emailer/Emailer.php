@@ -13,8 +13,18 @@ class Emailer
     {
     }
 
-    public function sendFromQueue(QueueStoreInterface $queue)
+    /**
+     * @return void
+     */
+    public function sendFromQueue(MessageInterface $message, QueueStoreInterface $queue): bool
     {
+        if ($qm = $queue->receive()) {
+            $message->setSubject($qm->title);
+            $message->setTextBody($qm->content);
+            return $this->send($message, $qm->email, $qm->userId);
+        }
+
+        return false;
     }
 
     public function send(MessageInterface $message, string $email, string $id): bool

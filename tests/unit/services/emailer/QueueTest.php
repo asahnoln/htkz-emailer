@@ -9,7 +9,6 @@ use app\services\emailer\Subscriber;
 use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\interfaces\OfferInterface;
 use app\services\emailer\interfaces\QueueStoreInterface;
-use yii\mail\MessageInterface;
 use yii\symfonymailer\Message;
 
 class QueueTest extends \Codeception\Test\Unit
@@ -64,8 +63,17 @@ class QueueStoreStub implements QueueStoreInterface
     /** @var QueueMessage[] */
     public array $data = [];
 
-    public function __construct(private bool $failing = false)
+    /** @var QueueMessage[] */
+    public array $preparedQueue;
+
+    public function __construct(private bool $failing = false, private bool $empty = false)
     {
+        $this->preparedQueue = [
+            (new QueueMessage('1', 'a@a.a', 'hot offer', 'hot content')),
+            (new QueueMessage('2', 'b@a.a', 'hot offer', 'hot content')),
+            (new QueueMessage('3', 'c@a.a', 'hottest offer', 'hottest content')),
+            (new QueueMessage('4', 'd@a.a', 'hottest offer', 'hottest content')),
+        ];
     }
 
     public function send(QueueMessage $qm): bool
@@ -74,8 +82,13 @@ class QueueStoreStub implements QueueStoreInterface
         return !$this->failing;
     }
 
-    public function receive(): QueueMessage
+    public function receive(): ?QueueMessage
     {
+        if ($this->empty) {
+            return null;
+        }
+        
+        return array_pop($this->preparedQueue);
     }
 }
 

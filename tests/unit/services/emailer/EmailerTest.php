@@ -29,11 +29,33 @@ class EmailerTest extends \Codeception\Test\Unit
     {
         $m = new MailerSpy();
         $a = new AnalyticsStub();
-        $e = new Emailer($m, $a);
         $qs = new QueueStoreStub();
+        $baseMessage = new Message();
 
-        $e->sendFromQueue($qs);
-        // verify($m->sentMessages)->arrayCount(3);
+        $e = new Emailer($m, $a);
+        $result = $e->sendFromQueue($baseMessage, $qs);
+        verify($result)->true();
+        verify($m->sentMessages)->arrayCount(1);
+        verify($m->sentMessages[0]->getTo())->arrayHasKey('d@a.a');
+        verify($m->sentMessages[0]->getSubject())->equals('hottest offer');
+        verify($baseMessage->getTextBody())->equals('hottest content');
+
+        $e->sendFromQueue($baseMessage, $qs);
+        verify($m->sentMessages)->arrayCount(2);
+    }
+
+    public function testDontSendFromEmptyQueue(): void
+    {
+        $m = new MailerSpy();
+        $a = new AnalyticsStub();
+        $qs = new QueueStoreStub(empty: true);
+        $baseMessage = new Message();
+
+        $e = new Emailer($m, $a);
+        $result = $e->sendFromQueue($baseMessage, $qs);
+        verify($result)->false();
+        verify($m->sentMessages)->arrayCount(0);
+
         // verify($mailer->sentMessages[0]->getTo())->arrayHasKey('a@a.a');
         // verify($mailer->sentMessages[0]->getSubject())->equals('test offer');
     }
