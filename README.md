@@ -46,7 +46,7 @@ docker-compose run --rm php vendor/bin/codecept run
 
 ### OfferInterface
 
-#### app\services\emailer\db\DbAudience
+#### app\services\emailer\db\DbOffer
 
 ### QueueStoreInterface
 
