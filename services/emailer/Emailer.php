@@ -14,7 +14,7 @@ class Emailer
     }
 
     /**
-     * @return void
+     * @return bool
      */
     public function sendFromQueue(MessageInterface $message, QueueStoreInterface $queue): bool
     {

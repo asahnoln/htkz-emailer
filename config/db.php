@@ -6,6 +6,7 @@ return [
     'username' => $_ENV['DB_USERNAME'],
     'password' => $_ENV['DB_PASSWORD'],
     'charset' => 'utf8',
+    'tablePrefix' => 'tbl_',
 
     // Schema cache options (for production environment)
     //'enableSchemaCache' => true,
