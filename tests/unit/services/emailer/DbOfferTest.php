@@ -2,9 +2,13 @@
 
 namespace tests\unit\services\emailer;
 
+use Codeception\Stub\Expected;
 use Yii;
 use app\services\emailer\db\DbOffer;
 use app\services\emailer\interfaces\OfferInterface;
+use yii\httpclient\Client;
+use yii\httpclient\Request;
+use yii\httpclient\Response;
 
 class DbOfferTest extends \Codeception\Test\Unit
 {
@@ -21,8 +25,7 @@ class DbOfferTest extends \Codeception\Test\Unit
     {
     }
 
-    // tests
-    public function testFindsOfferAndComposesMessage(): void
+    protected function createOffers(): void
     {
         Yii::$app->db
             ->createCommand()
@@ -39,17 +42,48 @@ class DbOfferTest extends \Codeception\Test\Unit
                     [4, 1, 'test offer 4', 'test offer info 4', '', 'T', strftime('%F %T', strtotime('next year')), 40, 2, 1, 'test url 4', 'titleuk', 'infouk', 'content', 'contentuk', 'seo test', '', '', 'test discount', '', 'test type', 'test fly', 'transfer test', 'ins test', 'hot test', 'visa test', 'ptest', '1971-04-04 01:01:01', '1971-04-04 01:01:01', 'test', 'advtest', 'vietest', 'noindex_test', 'urlTest', 'showTest', 'autoTest', '1971-04-04 01:01:01', '1971-04-04 01:01:01', '1971-04-04 01:01:01', 'combiTest', 'nightsTest', 'mealTest', 'autoStars', 'optest', 'chTest', 'chTest', 'chTest', 'ch', 'chTest', 'chTest', 'chTest'],
                     // Filter city
                     [5, 1, 'test offer 5', 'test offer info 5', '', 'T', strftime('%F %T', strtotime('next year')), 50, 1, 0, 'test url 5', 'titleuk', 'infouk', 'content', 'contentuk', 'seo test', '', '', 'test discount', '', 'test type', 'test fly', 'transfer test', 'ins test', 'hot test', 'visa test', 'ptest', '1971-05-05 01:01:01', '1971-05-05 01:01:01', 'test', 'advtest', 'vietest', 'noindex_test', 'urlTest', 'showTest', 'autoTest', '1971-05-05 01:01:01', '1971-05-05 01:01:01', '1971-05-05 01:01:01', 'combiTest', 'nightsTest', 'mealTest', 'autoStars', 'optest', 'chTest', 'chTest', 'chTest', 'ch', 'chTest', 'chTest', 'chTest'],
-            ]
+                ]
             )
             ->execute();
+    }
 
-        $a = new DbOffer();
+    // tests
+    public function testFindsOfferAndComposesMessage(): void
+    {
+        $this->createOffers();
+
+        // TODO: How to create list of tours? What data to use?
+        $url = 'http://testapi.com/somwhere';
+        $client =  $this->make(Client::class, [
+            'get' => Expected::once(function ($u, $data/* , $headers */) use ($url) {
+                verify($u)->equals($url);
+                verify($data['access-token'])->equals('secretToken');
+                verify($data['id'])->equals(2);
+                // verify($headers['content-type'])->equals('application/json');
+                // verify($headers['accept'])->equals('*/*');
+
+                return $this->make(Request::class, [
+                    'send' => Expected::once(function () {
+                        return $this->make(Response::class, [
+                            'data' => [
+                                'tours' => [
+                                    ['type' => 'good',],
+                                    ['type' => 'bad',],
+                                    ['type' => 'ugly',],
+                                ]
+                            ],
+                        ]);
+                    }),
+                ]);
+            }),
+        ]);
+
+        $a = new DbOffer($client, $url, 'secretToken');
 
         $result = $a->find('2');
 
         verify($a)->instanceOf(OfferInterface::class);
         verify($result->title)->equals('test offer 2');
-        // TODO: Content from API
-        // verify($result->content)->equals('test offer 2');
+        verify($result->content)->equals("good\nbad\nugly");
     }
 }
