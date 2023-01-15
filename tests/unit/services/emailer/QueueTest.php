@@ -9,7 +9,6 @@ use app\services\emailer\Subscriber;
 use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\interfaces\OfferInterface;
 use app\services\emailer\interfaces\QueueStoreInterface;
-use yii\symfonymailer\Message;
 
 class QueueTest extends \Codeception\Test\Unit
 {
@@ -34,6 +33,7 @@ class QueueTest extends \Codeception\Test\Unit
         $q = new Queue($qs);
         $offer = new OfferStub();
         $audience = new AudienceStub();
+        $qs->data = [];
 
         $result = $q->queueOfferToAudience('almaty', $offer, $audience);
 
@@ -61,14 +61,11 @@ class QueueTest extends \Codeception\Test\Unit
 class QueueStoreStub implements QueueStoreInterface
 {
     /** @var QueueMessage[] */
-    public array $data = [];
-
-    /** @var QueueMessage[] */
-    public array $preparedQueue;
+    public array $data;
 
     public function __construct(private bool $failing = false, private bool $empty = false)
     {
-        $this->preparedQueue = [
+        $this->data = [
             (new QueueMessage('1', 'a@a.a', 'hot offer', 'hot content')),
             (new QueueMessage('2', 'b@a.a', 'hot offer', 'hot content')),
             (new QueueMessage('3', 'c@a.a', 'hottest offer', 'hottest content')),
@@ -88,7 +85,7 @@ class QueueStoreStub implements QueueStoreInterface
             return null;
         }
 
-        return array_pop($this->preparedQueue);
+        return array_pop($this->data);
     }
 }
 
@@ -108,9 +105,23 @@ class AudienceStub implements AudienceInterface
     public function findAll(string $city): array
     {
         return [
-            new Subscriber('a@a.a', '1'),
-            new Subscriber('b@b.b', '2'),
-            new Subscriber('c@c.c', '3'),
-        ];
+            'almaty' => [
+                new Subscriber('a@a.a', '1'),
+                new Subscriber('b@b.b', '2'),
+                new Subscriber('c@c.c', '3'),
+            ],
+            '1' => [
+                new Subscriber('a@a.a', '1'),
+                new Subscriber('b@b.b', '2'),
+                new Subscriber('c@c.c', '3'),
+            ],
+            '2' => [
+                new Subscriber('d@a.a', '4'),
+                new Subscriber('e@b.b', '5'),
+            ],
+            '3' => [
+                new Subscriber('f@b.b', '6'),
+            ],
+        ][$city];
     }
 }

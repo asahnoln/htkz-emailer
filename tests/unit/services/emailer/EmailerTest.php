@@ -3,6 +3,7 @@
 namespace tests\unit\services\emailer;
 
 use app\services\emailer\Emailer;
+use app\services\emailer\QueueMessage;
 use app\services\emailer\interfaces\AnalyticsInterface;
 use yii\mail\MailerInterface;
 use yii\mail\MessageInterface;
@@ -33,7 +34,8 @@ class EmailerTest extends \Codeception\Test\Unit
 
         $e = new Emailer($m, $a);
         $result = $e->sendFromQueue($baseMessage, $qs);
-        verify($result)->true();
+        verify($result)->instanceOf(QueueMessage::class);
+        verify($result->sent)->true();
         verify($m->sentMessages)->arrayCount(1);
         verify($m->sentMessages[0]->getTo())->arrayHasKey('d@a.a');
         verify($m->sentMessages[0]->getSubject())->equals('hottest offer');
@@ -44,7 +46,7 @@ class EmailerTest extends \Codeception\Test\Unit
         verify($m->sentMessages)->arrayCount(2);
     }
 
-    public function testDontSendFromEmptyQueue(): void
+public function testDontSendFromEmptyQueue(): void
     {
         $m = new MailerSpy();
         $a = new AnalyticsStub();
@@ -53,12 +55,28 @@ class EmailerTest extends \Codeception\Test\Unit
 
         $e = new Emailer($m, $a);
         $result = $e->sendFromQueue($baseMessage, $qs);
-        verify($result)->false();
+        verify($result)->null();
         verify($m->sentMessages)->arrayCount(0);
-
-        // verify($mailer->sentMessages[0]->getTo())->arrayHasKey('a@a.a');
-        // verify($mailer->sentMessages[0]->getSubject())->equals('test offer');
     }
+
+    public function testDontSendIfMailFail(): void
+    {
+        $m = new MailerSpy(failing: true);
+        $a = new AnalyticsStub();
+        $qs = new QueueStoreStub();
+        $baseMessage = new Message();
+
+        $e = new Emailer($m, $a);
+        $result = $e->sendFromQueue($baseMessage, $qs);
+        verify($result)->notNull();
+        verify($result->sent)->false();
+    }
+
+    // public function testEmailerInjection(): void
+    // {
+    //     $e = Yii::$container->get(Emailer::class);
+    //     verify($e)->notNull();
+    // }
 }
 
 class MailerSpy implements MailerInterface

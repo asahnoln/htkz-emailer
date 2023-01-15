@@ -6,5 +6,5 @@ use app\services\emailer\OfferMessage;
 
 interface OfferInterface
 {
-    public function find(string $city): OfferMessage;
+    public function find(string $city): ?OfferMessage;
 }

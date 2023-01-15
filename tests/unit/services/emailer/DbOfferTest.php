@@ -78,12 +78,19 @@ class DbOfferTest extends \Codeception\Test\Unit
             }),
         ]);
 
-        $a = new DbOffer($client, $url, 'secretToken');
+        $o = new DbOffer($client, $url, 'secretToken');
 
-        $result = $a->find('2');
+        $result = $o->find('2');
 
-        verify($a)->instanceOf(OfferInterface::class);
+        verify($o)->instanceOf(OfferInterface::class);
         verify($result->title)->equals('test offer 2');
         verify($result->content)->equals("good\nbad\nugly");
+    }
+
+    public function testNoOfferFound(): void
+    {
+        $o = new DbOffer($this->make(Client::class), 'test', 'token');
+        $result = $o->find('99999');
+        verify($result)->null();
     }
 }

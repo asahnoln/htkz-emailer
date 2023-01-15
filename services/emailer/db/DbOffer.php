@@ -13,15 +13,19 @@ class DbOffer implements OfferInterface
     {
     }
 
-    public function find(string $city): OfferMessage
+    public function find(string $city): ?OfferMessage
     {
         $offer = (new Query())
             ->select(['id', 'title', 'priority'])
             ->from('tbl_post_original')
             ->where(['city_id' => $city, 'hidden_from_site' => 0])
-            ->andWhere(['>', 'endDate', strftime('%F %T')])
+            ->andWhere(['>', 'endDate', date('Y-m-d H:i:s')])
             ->orderBy(['priority' => SORT_DESC])
             ->one();
+
+        if (!$offer) {
+            return null;
+        }
 
         $response = $this->client
             ->get($this->url, [
