@@ -58,10 +58,10 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
         verify($msgs[0]['read_count'])->equals(0);
         verify($msgs[0]['site_visit_count'])->equals(0);
         verify($msgs[0]['previewEmail'])->equals('');
-        verify($msgs[0]['addDate'])->equals(strftime('%F %T'));
+        verify($msgs[0]['addDate'])->equals(date('Y-m-d H:i:s'));
         verify($msgs[0]['activationDate'])->equals('1970-01-01 00:00:00');
-        verify($msgs[0]['startDate'])->equals(strftime('%F %T'));
-        verify($msgs[0]['endDate'])->equals(strftime('%F %T'));
+        verify($msgs[0]['startDate'])->equals(date('Y-m-d H:i:s'));
+        verify($msgs[0]['endDate'])->equals(date('Y-m-d H:i:s'));
         verify($msgs[0]['custom_file'])->equals('');
         verify($msgs[0]['activationToken'])->equals('');
 

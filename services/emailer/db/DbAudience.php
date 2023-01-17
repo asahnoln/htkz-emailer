@@ -23,7 +23,7 @@ class DbAudience implements AudienceInterface
 
         $subs = [];
         foreach ($items as $item) {
-            if (strtotime($item['endDate']) > strtotime('7 days ago')) {
+            if (strtotime($item['endDate'] ?? '') > strtotime('7 days ago')) {
                 continue;
             }
 

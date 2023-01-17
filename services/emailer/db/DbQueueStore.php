@@ -24,10 +24,10 @@ class DbQueueStore implements QueueStoreInterface
             'read_count' => 0,
             'site_visit_count' => 0,
             'previewEmail' => '',
-            'addDate' => strftime('%F %T'),
+            'addDate' => date('Y-m-d H:i:s'),
             'activationDate' => '1970-01-01 00:00:00',
-            'startDate' => strftime('%F %T'),
-            'endDate' => strftime('%F %T'),
+            'startDate' => date('Y-m-d H:i:s'),
+            'endDate' => date('Y-m-d H:i:s'),
             'custom_file' => '',
             'activationToken' => '',
         ])->execute();

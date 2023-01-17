@@ -4,8 +4,9 @@
 # RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
 
 actor: UnitTester
+error_level: E_ALL
 modules:
-    enabled:
-      - Asserts
-      - Yii2:
-            part: [orm, email, fixtures]
+  enabled:
+    - Asserts
+    - Yii2:
+        part: [orm, email, fixtures]
