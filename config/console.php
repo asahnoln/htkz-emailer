@@ -58,7 +58,7 @@ $config = [
             MailerInterface::class => [
                 'class' => Mailer::class,
                 'transport' => [
-                    'dsn' => $_ENV['MESSAGE_TRANSPORT_DSN'],
+                    'dsn' => $_ENV['MAILER_TRANSPORT_DSN'],
                 ],
             ],
             AnalyticsInterface::class => [
@@ -71,7 +71,7 @@ $config = [
             ],
             MessageInterface::class => [
                 'class' => Message::class,
-                'from' => 'test@test.com',
+                'from' => $_ENV['MESSAGE_FROM'],
             ],
         ],
         'singletons' => [

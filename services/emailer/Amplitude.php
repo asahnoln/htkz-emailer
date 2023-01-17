@@ -5,12 +5,23 @@ namespace app\services\emailer;
 use app\services\emailer\interfaces\AnalyticsInterface;
 use yii\httpclient\Client;
 
+/**
+ * Сервис аналитики Amplitude.
+ */
 class Amplitude implements AnalyticsInterface
 {
+    /**
+     * @param Client $client HTTP-клиент для запросов к Amplitude
+     * @param string $url    Ссылка на endpoint в Amplitude
+     * @param string $key    Токен для запросов в Amplitude
+     */
     public function __construct(private Client $client, private string $url, private string $key)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function send(string $id): bool
     {
         $response = $this->client->post($this->url, [

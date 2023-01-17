@@ -6,10 +6,13 @@ use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\Subscriber;
 use yii\db\Query;
 
+/**
+ * Аудитория, хранимая в БД.
+ */
 class DbAudience implements AudienceInterface
 {
     /**
-     * @return Subscriber[]
+     * {@inheritdoc}
      */
     public function findAll(string $city): array
     {

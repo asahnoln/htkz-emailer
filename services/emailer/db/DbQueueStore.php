@@ -6,8 +6,16 @@ use app\services\emailer\interfaces\QueueStoreInterface;
 use app\services\emailer\QueueMessage;
 use yii\db\Query;
 
+/**
+ * Очередь реализованная в БД.
+ *
+ * TODO: Исправить race condition
+ */
 class DbQueueStore implements QueueStoreInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function send(QueueMessage $message): bool
     {
         \Yii::$app->db->createCommand()->insert('{{%mail_message}}', [
@@ -35,6 +43,9 @@ class DbQueueStore implements QueueStoreInterface
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function receive(): ?QueueMessage
     {
         $m = (new Query())

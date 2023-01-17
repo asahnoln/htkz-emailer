@@ -8,6 +8,9 @@ use app\services\emailer\interfaces\QueueStoreInterface;
 
 class Queue
 {
+    /**
+     * @param QueueStoreInterface $store Источник очереди
+     */
     public function __construct(private QueueStoreInterface $store)
     {
     }
