@@ -38,14 +38,26 @@ class QueueTest extends \Codeception\Test\Unit
         verify($qs->data)->arrayCount(3);
         verify($qs->data[0]->email)->equals('a@a.a');
         verify($qs->data[0]->userId)->equals('1');
-        verify($qs->data[0]->title)->equals('hot test offer');
-        verify($qs->data[0]->content)->equals('hot test offer content');
+        verify($qs->data[0]->title)->equals('hot hot hot offer');
+        verify($qs->data[0]->content)->equals('hot hot hot offer content');
     }
 
     public function testFailingStoreShouldNotCount(): void
     {
         $qs = new QueueStoreStub(failing: true);
         $offer = new OfferStub();
+        $audience = new AudienceStub();
+
+        $q = new Queue($qs);
+        $result = $q->queueOfferToAudience('almaty', $offer, $audience);
+
+        verify($result)->equals(0);
+    }
+
+    public function testFailingOfferShouldStopQueue(): void
+    {
+        $qs = new QueueStoreStub();
+        $offer = new OfferStub(failing: true);
         $audience = new AudienceStub();
 
         $q = new Queue($qs);
@@ -97,9 +109,17 @@ class QueueStoreStub implements QueueStoreInterface
 
 class OfferStub implements OfferInterface
 {
-    public function find(string $city): OfferMessage
+    public function __construct(private bool $failing = false)
     {
-        return new OfferMessage('hot offer', 'hot offer content');
+    }
+
+    public function find(string $city): ?OfferMessage
+    {
+        if ($this->failing) {
+            return null;
+        }
+
+        return new OfferMessage('hot hot hot offer', 'hot hot hot offer content');
     }
 }
 
