@@ -2,20 +2,78 @@
 
 namespace tests\unit\services\emailer;
 
-use Codeception\Stub\Expected;
-use Yii;
 use app\services\emailer\db\DbOffer;
 use app\services\emailer\interfaces\OfferInterface;
+use Codeception\Stub\Expected;
 use yii\httpclient\Client;
 use yii\httpclient\Request;
 use yii\httpclient\Response;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class DbOfferTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
      */
     protected $tester;
+
+    // tests
+    public function testFindsOfferAndComposesMessage(): void
+    {
+        $this->createOffers();
+
+        // TODO: How to create list of tours? What data to use?
+        $url = 'http://testapi.com/somwhere';
+        $client = $this->make(Client::class, [
+            'get' => Expected::once(function ($u, $data/* , $headers */) use ($url) {
+                verify($u)->equals($url);
+                verify($data['access-token'])->equals('secretToken');
+                verify($data['id'])->equals(2);
+
+                return $this->make(Request::class, [
+                    'send' => Expected::once(function () {
+                        return $this->make(Response::class, [
+                            'data' => [
+                                'tours' => [
+                                    [
+                                        'hotel' => ['name' => 'good'],
+                                        'price' => ['forTour' => 1],
+                                    ],
+                                    [
+                                        'hotel' => ['name' => 'bad'],
+                                        'price' => ['forTour' => 10],
+                                    ],
+                                    [
+                                        'hotel' => ['name' => 'ugly'],
+                                        'price' => ['forTour' => 100],
+                                    ],
+                                ],
+                            ],
+                        ]);
+                    }),
+                ]);
+            }),
+        ]);
+
+        $o = new DbOffer($client, $url, 'secretToken');
+
+        $result = $o->find('2');
+
+        verify($o)->instanceOf(OfferInterface::class);
+        verify($result->title)->equals('test offer 2');
+        verify($result->content)->equals("good - 1\nbad - 10\nugly - 100");
+    }
+
+    public function testNoOfferFound(): void
+    {
+        $o = new DbOffer($this->make(Client::class), 'test', 'token');
+        $result = $o->find('99999');
+        verify($result)->null();
+    }
 
     protected function _before(): void
     {
@@ -27,7 +85,7 @@ class DbOfferTest extends \Codeception\Test\Unit
 
     protected function createOffers(): void
     {
-        Yii::$app->db
+        \Yii::$app->db
             ->createCommand()
             ->batchInsert(
                 'tbl_post_original',
@@ -44,53 +102,7 @@ class DbOfferTest extends \Codeception\Test\Unit
                     [5, 1, 'test offer 5', 'test offer info 5', '', 'T', strftime('%F %T', strtotime('next year')), 50, 1, 0, 'test url 5', 'titleuk', 'infouk', 'content', 'contentuk', 'seo test', '', '', 'test discount', '', 'test type', 'test fly', 'transfer test', 'ins test', 'hot test', 'visa test', 'ptest', '1971-05-05 01:01:01', '1971-05-05 01:01:01', 'test', 'advtest', 'vietest', 'noindex_test', 'urlTest', 'showTest', 'autoTest', '1971-05-05 01:01:01', '1971-05-05 01:01:01', '1971-05-05 01:01:01', 'combiTest', 'nightsTest', 'mealTest', 'autoStars', 'optest', 'chTest', 'chTest', 'chTest', 'ch', 'chTest', 'chTest', 'chTest'],
                 ]
             )
-            ->execute();
-    }
-
-    // tests
-    public function testFindsOfferAndComposesMessage(): void
-    {
-        $this->createOffers();
-
-        // TODO: How to create list of tours? What data to use?
-        $url = 'http://testapi.com/somwhere';
-        $client =  $this->make(Client::class, [
-            'get' => Expected::once(function ($u, $data/* , $headers */) use ($url) {
-                verify($u)->equals($url);
-                verify($data['access-token'])->equals('secretToken');
-                verify($data['id'])->equals(2);
-                // verify($headers['content-type'])->equals('application/json');
-                // verify($headers['accept'])->equals('*/*');
-
-                return $this->make(Request::class, [
-                    'send' => Expected::once(function () {
-                        return $this->make(Response::class, [
-                            'data' => [
-                                'tours' => [
-                                    ['type' => 'good',],
-                                    ['type' => 'bad',],
-                                    ['type' => 'ugly',],
-                                ]
-                            ],
-                        ]);
-                    }),
-                ]);
-            }),
-        ]);
-
-        $o = new DbOffer($client, $url, 'secretToken');
-
-        $result = $o->find('2');
-
-        verify($o)->instanceOf(OfferInterface::class);
-        verify($result->title)->equals('test offer 2');
-        verify($result->content)->equals("good\nbad\nugly");
-    }
-
-    public function testNoOfferFound(): void
-    {
-        $o = new DbOffer($this->make(Client::class), 'test', 'token');
-        $result = $o->find('99999');
-        verify($result)->null();
+            ->execute()
+        ;
     }
 }

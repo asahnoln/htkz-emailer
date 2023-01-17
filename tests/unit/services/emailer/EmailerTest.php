@@ -3,26 +3,23 @@
 namespace tests\unit\services\emailer;
 
 use app\services\emailer\Emailer;
-use app\services\emailer\QueueMessage;
 use app\services\emailer\interfaces\AnalyticsInterface;
+use app\services\emailer\QueueMessage;
 use yii\mail\MailerInterface;
 use yii\mail\MessageInterface;
 use yii\symfonymailer\Message;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class EmailerTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
      */
     protected $tester;
-
-    protected function _before(): void
-    {
-    }
-
-    protected function _after(): void
-    {
-    }
 
     // tests
     public function testSendFromQueue(): void
@@ -47,17 +44,17 @@ class EmailerTest extends \Codeception\Test\Unit
     }
 
 public function testDontSendFromEmptyQueue(): void
-    {
-        $m = new MailerSpy();
-        $a = new AnalyticsStub();
-        $qs = new QueueStoreStub(empty: true);
-        $baseMessage = new Message();
+{
+    $m = new MailerSpy();
+    $a = new AnalyticsStub();
+    $qs = new QueueStoreStub(empty: true);
+    $baseMessage = new Message();
 
-        $e = new Emailer($m, $a);
-        $result = $e->sendFromQueue($baseMessage, $qs);
-        verify($result)->null();
-        verify($m->sentMessages)->arrayCount(0);
-    }
+    $e = new Emailer($m, $a);
+    $result = $e->sendFromQueue($baseMessage, $qs);
+    verify($result)->null();
+    verify($m->sentMessages)->arrayCount(0);
+}
 
     public function testDontSendIfMailFail(): void
     {
@@ -70,6 +67,14 @@ public function testDontSendFromEmptyQueue(): void
         $result = $e->sendFromQueue($baseMessage, $qs);
         verify($result)->notNull();
         verify($result->sent)->false();
+    }
+
+    protected function _before(): void
+    {
+    }
+
+    protected function _after(): void
+    {
     }
 
     // public function testEmailerInjection(): void
@@ -96,6 +101,7 @@ class MailerSpy implements MailerInterface
     public function send($message): bool
     {
         $this->sentMessages[] = clone $message;
+
         return !$this->failing;
     }
 
@@ -109,9 +115,11 @@ class AnalyticsStub implements AnalyticsInterface
 {
     /** @var int[] */
     public array $ids = [];
+
     public function send(string $id): bool
     {
         $this->ids[] = $id;
+
         return true;
     }
 }

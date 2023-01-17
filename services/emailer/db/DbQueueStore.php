@@ -2,16 +2,15 @@
 
 namespace app\services\emailer\db;
 
-use Yii;
-use app\services\emailer\QueueMessage;
 use app\services\emailer\interfaces\QueueStoreInterface;
+use app\services\emailer\QueueMessage;
 use yii\db\Query;
 
 class DbQueueStore implements QueueStoreInterface
 {
     public function send(QueueMessage $message): bool
     {
-        Yii::$app->db->createCommand()->insert('tbl_mail_message', [
+        \Yii::$app->db->createCommand()->insert('tbl_mail_message', [
             'mail_id' => $message->userId,
             'title' => $message->title,
             'titleBig' => $message->title,
@@ -21,9 +20,9 @@ class DbQueueStore implements QueueStoreInterface
             'is_sending' => 0,
             'chunk_sending_started_at' => '1970-01-01 00:00:00',
             'send_count' => 0,
-            'error_count'=> 0,
-            'read_count'=> 0,
-            'site_visit_count'=> 0,
+            'error_count' => 0,
+            'read_count' => 0,
+            'site_visit_count' => 0,
             'previewEmail' => '',
             'addDate' => strftime('%F %T'),
             'activationDate' => '1970-01-01 00:00:00',
@@ -44,16 +43,16 @@ class DbQueueStore implements QueueStoreInterface
             ->innerJoin('{{%mail}} m', 'm.id = mm.mail_id')
             ->where(['state' => 0])
             ->orderBy(['mm.addDate' => SORT_DESC, 'mm.id' => SORT_DESC])
-            ->one();
+            ->one()
+        ;
 
         if (!$m) {
             return null;
         }
 
-        Yii::$app->db->createCommand()
+        \Yii::$app->db->createCommand()
             ->update('{{%mail_message}}', ['state' => 1], 'id = :id')->bindValue(':id', $m['id'])->execute();
 
-        $qm = new QueueMessage($m['mail_id'], $m['email'], $m['title'], $m['content']);
-        return $qm;
+        return new QueueMessage($m['mail_id'], $m['email'], $m['title'], $m['content']);
     }
 }

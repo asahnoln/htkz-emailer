@@ -1,10 +1,10 @@
 <?php
 
 use app\services\emailer\Amplitude;
-use app\services\emailer\Emailer;
 use app\services\emailer\db\DbAudience;
 use app\services\emailer\db\DbOffer;
 use app\services\emailer\db\DbQueueStore;
+use app\services\emailer\Emailer;
 use app\services\emailer\interfaces\AnalyticsInterface;
 use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\interfaces\OfferInterface;
@@ -75,7 +75,7 @@ $config = [
                 '__construct()' => [
                     Instance::of(MailerInterface::class),
                     Instance::of(AnalyticsInterface::class),
-                ]
+                ],
             ],
         ],
     ],
@@ -101,7 +101,7 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        // 'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 

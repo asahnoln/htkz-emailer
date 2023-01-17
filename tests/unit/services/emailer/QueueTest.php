@@ -2,28 +2,25 @@
 
 namespace tests\unit\services\emailer;
 
+use app\services\emailer\interfaces\AudienceInterface;
+use app\services\emailer\interfaces\OfferInterface;
+use app\services\emailer\interfaces\QueueStoreInterface;
 use app\services\emailer\OfferMessage;
 use app\services\emailer\Queue;
 use app\services\emailer\QueueMessage;
 use app\services\emailer\Subscriber;
-use app\services\emailer\interfaces\AudienceInterface;
-use app\services\emailer\interfaces\OfferInterface;
-use app\services\emailer\interfaces\QueueStoreInterface;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class QueueTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
      */
     protected $tester;
-
-    protected function _before(): void
-    {
-    }
-
-    protected function _after(): void
-    {
-    }
 
     // tests
     public function testSendQueue(): void
@@ -56,6 +53,14 @@ class QueueTest extends \Codeception\Test\Unit
 
         verify($result)->equals(0);
     }
+
+    protected function _before(): void
+    {
+    }
+
+    protected function _after(): void
+    {
+    }
 }
 
 class QueueStoreStub implements QueueStoreInterface
@@ -66,16 +71,17 @@ class QueueStoreStub implements QueueStoreInterface
     public function __construct(private bool $failing = false, private bool $empty = false)
     {
         $this->data = [
-            (new QueueMessage('1', 'a@a.a', 'hot offer', 'hot content')),
-            (new QueueMessage('2', 'b@a.a', 'hot offer', 'hot content')),
-            (new QueueMessage('3', 'c@a.a', 'hottest offer', 'hottest content')),
-            (new QueueMessage('4', 'd@a.a', 'hottest offer', 'hottest content')),
+            new QueueMessage('1', 'a@a.a', 'hot offer', 'hot content'),
+            new QueueMessage('2', 'b@a.a', 'hot offer', 'hot content'),
+            new QueueMessage('3', 'c@a.a', 'hottest offer', 'hottest content'),
+            new QueueMessage('4', 'd@a.a', 'hottest offer', 'hottest content'),
         ];
     }
 
     public function send(QueueMessage $qm): bool
     {
         $this->data[] = $qm;
+
         return !$this->failing;
     }
 
@@ -93,7 +99,7 @@ class OfferStub implements OfferInterface
 {
     public function find(string $city): OfferMessage
     {
-        return (new OfferMessage('hot offer', 'hot offer content'));
+        return new OfferMessage('hot offer', 'hot offer content');
     }
 }
 

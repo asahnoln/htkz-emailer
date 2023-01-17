@@ -2,8 +2,8 @@
 
 namespace app\services\emailer\db;
 
-use app\services\emailer\OfferMessage;
 use app\services\emailer\interfaces\OfferInterface;
+use app\services\emailer\OfferMessage;
 use yii\db\Query;
 use yii\httpclient\Client;
 
@@ -21,7 +21,8 @@ class DbOffer implements OfferInterface
             ->where(['city_id' => $city, 'hidden_from_site' => 0])
             ->andWhere(['>', 'endDate', date('Y-m-d H:i:s')])
             ->orderBy(['priority' => SORT_DESC])
-            ->one();
+            ->one()
+        ;
 
         if (!$offer) {
             return null;
@@ -30,17 +31,19 @@ class DbOffer implements OfferInterface
         $response = $this->client
             ->get($this->url, [
                 'access-token' => $this->key,
-                'id' => $offer['id']
+                'id' => $offer['id'],
             ])
-            ->send();
+            ->send()
+        ;
         $data = $response->data;
 
-        // TODO: What test should be composed for tours? What data to use?
+        // TODO: What price should be used? ForTour
+        // TODO: Move out to a template
         $content = [];
         foreach ($data['tours'] as $tour) {
-            $content[] = $tour['type'];
+            $content[] = "{$tour['hotel']['name']} - {$tour['price']['forTour']}";
         }
 
-        return (new OfferMessage($offer['title'], implode("\n", $content)));
+        return new OfferMessage($offer['title'], implode("\n", $content));
     }
 }

@@ -2,11 +2,15 @@
 
 namespace services\emailer;
 
-use Yii;
-use app\services\emailer\QueueMessage;
 use app\services\emailer\db\DbQueueStore;
 use app\services\emailer\interfaces\QueueStoreInterface;
+use app\services\emailer\QueueMessage;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class DbQueueStoreTest extends \Codeception\Test\Unit
 {
     /**
@@ -14,57 +18,9 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
-    protected function _before(): void
-    {
-        $this->createMails();
-    }
-
-    protected function _after(): void
-    {
-    }
-
-    protected function createUser(): void
-    {
-        Yii::$app->db->createCommand()->insert('tbl_user_original', [
-            'id' => 1,
-            'brand_id' => 0,
-            'company_id' => 0,
-            'site' => '1',
-            'username' => 'test',
-            'password' => 'passwd',
-            'salt' => 'abcd',
-            'mpassword' => 'passwd',
-            'fname' => 'Test',
-            'sname' => 'Test',
-            'patronymic' => 'Test',
-            'job' => 'test',
-            'birthday' => '1970-01-01 00:00:00',
-            'sex' => 'm',
-            'address' => '',
-            'phone' => '',
-            'private_phone' => '',
-            'phone_mobile' => '',
-            'canonical_phone_mobile_with_code' => '',
-            'crm_ids' => '',
-            'passport_n' => '',
-            'passport_date' => '1970-01-01 00:00:00',
-            'passport_exp' => '1970-01-01 00:00:00',
-            'passport_scan' => '',
-            'iin' => '',
-            'email' => '',
-            'subscription' => '1',
-            'avatar' => '',
-            'info' => '',
-            'organizationInfo' => '',
-            'ref_count' => 0,
-            'last_ip' => '',
-            'del' => 0,
-        ])->execute();
-    }
-
     public function createMails(): void
     {
-        Yii::$app->db
+        \Yii::$app->db
             ->createCommand()
             ->batchInsert(
                 'tbl_mail',
@@ -74,7 +30,8 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
                     [2, 'b@b.b', 1, 1, 0, 'test site', 'test place', 1, '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', 1, '1970-01-01 00:00:00', '1970-01-01 00:00:00'],
                 ]
             )
-            ->execute();
+            ->execute()
+        ;
     }
 
     // tests
@@ -88,7 +45,7 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
         $qm = new QueueMessage('2', 'test2@mail.com', 'Wow Offer', 'Offer Content');
         $qs->send($qm);
 
-        $msgs = Yii::$app->db->createCommand('SELECT * FROM tbl_mail_message')->queryAll();
+        $msgs = \Yii::$app->db->createCommand('SELECT * FROM tbl_mail_message')->queryAll();
         verify($msgs)->arrayCount(2);
         verify($msgs[0]['title'])->equals('Wow Offer');
         verify($msgs[0]['content'])->equals('Offer Content');
@@ -107,7 +64,6 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
         verify($msgs[0]['endDate'])->equals(strftime('%F %T'));
         verify($msgs[0]['custom_file'])->equals('');
         verify($msgs[0]['activationToken'])->equals('');
-
 
         // TODO: site -> 1? hottour
         // TODO: Confirm all of the above values
@@ -130,5 +86,14 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
         verify($received)->equals($qm1);
 
         verify($qs->receive())->null();
+    }
+
+    protected function _before(): void
+    {
+        $this->createMails();
+    }
+
+    protected function _after(): void
+    {
     }
 }

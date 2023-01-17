@@ -16,13 +16,15 @@ class Queue
     {
         $count = 0;
         $offerMessage = $offer->find($city);
+
         /** @var Subscriber $sub */
         foreach ($audience->findAll($city) as $sub) {
             $qm = new QueueMessage($sub->id, $sub->email, 'hot test offer', 'hot test offer content');
             if ($this->store->send($qm)) {
-                $count++;
+                ++$count;
             }
         }
+
         return $count;
     }
 }

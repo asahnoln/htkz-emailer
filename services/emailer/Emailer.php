@@ -35,6 +35,7 @@ class Emailer
 
         if ($this->mailer->send($message)) {
             $this->analytics->send($id);
+
             return true;
         }
 
