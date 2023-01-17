@@ -55,7 +55,12 @@ $config = [
                 ],
             ],
             QueueStoreInterface::class => DbQueueStore::class,
-            MailerInterface::class => Mailer::class,
+            MailerInterface::class => [
+                'class' => Mailer::class,
+                'transport' => [
+                    'dsn' => $_ENV['MESSAGE_TRANSPORT_DSN'],
+                ],
+            ],
             AnalyticsInterface::class => [
                 'class' => Amplitude::class,
                 '__construct()' => [

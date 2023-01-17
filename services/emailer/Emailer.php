@@ -19,6 +19,7 @@ class Emailer
     public function sendFromQueue(MessageInterface $message, QueueStoreInterface $queue): ?QueueMessage
     {
         if ($qm = $queue->receive()) {
+            // TODO: Check if title is too long? Could it be a problem?
             $message->setSubject($qm->title);
             $message->setTextBody($qm->content);
             $qm->sent = $this->send($message, $qm->email, $qm->userId);

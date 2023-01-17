@@ -25,6 +25,8 @@ class DbOffer implements OfferInterface
         ;
 
         if (!$offer) {
+            \Yii::warning("Offer was not found in DB for city {$city}");
+
             return null;
         }
 
@@ -35,6 +37,14 @@ class DbOffer implements OfferInterface
             ])
             ->send()
         ;
+
+        if (!$response->isOk) {
+            \Yii::warning('Request to API failed');
+            \Yii::warning($response);
+
+            return null;
+        }
+
         $data = $response->data;
 
         // TODO: What price should be used? ForTour

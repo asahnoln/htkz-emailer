@@ -17,8 +17,6 @@ class Queue
         $count = 0;
         $offerMessage = $offer->find($city);
         if (!$offerMessage) {
-            \Yii::warning("Offer for city {$city} was not found, skipping");
-
             return 0;
         }
 

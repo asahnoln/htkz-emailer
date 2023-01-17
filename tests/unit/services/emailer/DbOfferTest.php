@@ -26,7 +26,6 @@ class DbOfferTest extends \Codeception\Test\Unit
     {
         $this->createOffers();
 
-        // TODO: How to create list of tours? What data to use?
         $url = 'http://testapi.com/somwhere';
         $client = $this->make(Client::class, [
             'get' => Expected::once(function ($u, $data/* , $headers */) use ($url) {
@@ -53,6 +52,7 @@ class DbOfferTest extends \Codeception\Test\Unit
                                     ],
                                 ],
                             ],
+                            'getStatusCode' => 200,
                         ]);
                     }),
                 ]);
@@ -72,6 +72,33 @@ class DbOfferTest extends \Codeception\Test\Unit
     {
         $o = new DbOffer($this->make(Client::class), 'test', 'token');
         $result = $o->find('99999');
+        verify($result)->null();
+    }
+
+    public function testAPIHasNoOffer(): void
+    {
+        $this->createOffers();
+
+        $client = $this->make(Client::class, [
+            'get' => Expected::once(function () {
+                return $this->make(Request::class, [
+                    'send' => Expected::once(function () {
+                        return $this->make(Response::class, [
+                            'data' => [
+                                'name' => 'Not Found',
+                                'message' => 'No tour found',
+                                'code' => 0,
+                                'status' => 404,
+                            ],
+                            'getStatusCode' => 404,
+                        ]);
+                    }),
+                ]);
+            }),
+        ]);
+
+        $o = new DbOffer($client, 'test', 'token');
+        $result = $o->find('2');
         verify($result)->null();
     }
 
@@ -95,7 +122,7 @@ class DbOfferTest extends \Codeception\Test\Unit
                     // Sort priority
                     [2, 1, 'test offer 2', 'test offer info 2', '', 'T', date('Y-m-d H:i:s', strtotime('next year')), 20, 2, 0, 'test url 2', 'titleuk', 'infouk', 'content', 'contentuk', 'seo test', '', '', 'test discount', '', 'test type', 'test fly', 'transfer test', 'ins test', 'hot test', 'visa test', 'ptest', '1971-02-02 01:01:01', '1971-02-02 01:01:01', 'test', 'advtest', 'vietest', 'noindex_test', 'urlTest', 'showTest', 'autoTest', '1971-02-02 01:01:01', '1971-02-02 01:01:01', '1971-02-02 01:01:01', 'combiTest', 'nightsTest', 'mealTest', 'autoStars', 'optest', 'chTest', 'chTest', 'chTest', 'ch', 'chTest', 'chTest', 'chTest'],
                     // Filter endDate
-                    [3, 1, 'test offer 3', 'test offer info 3', '', 'T', date('Y-m-d H:i:s', strtotime('1 minute ago')), 30, 2, 0, 'test url 3', 'titleuk', 'infouk', 'content', 'contentuk', 'seo test', '', '', 'test discount', '', 'test type', 'test fly', 'transfer test', 'ins test', 'hot test', 'visa test', 'ptest', '1971-03-03 01:01:01', '1971-03-03 01:01:01', 'test', 'advtest', 'vietest', 'noindex_test', 'urlTest', 'showTest', 'autoTest', '1971-03-03 01:01:01', '1971-03-03 01:01:01', '1971-03-03 01:01:01', 'combiTest', 'nightsTest', 'mealTest', 'autoStars', 'optest', 'chTest', 'chTest', 'chTest', 'ch', 'chTest', 'chTest', 'chTest'],
+                    [3, 1, 'test offer 3', 'test offer info 3', '', 'T', date('Y-m-d H:i:s', strtotime('yesterday')), 30, 2, 0, 'test url 3', 'titleuk', 'infouk', 'content', 'contentuk', 'seo test', '', '', 'test discount', '', 'test type', 'test fly', 'transfer test', 'ins test', 'hot test', 'visa test', 'ptest', '1971-03-03 01:01:01', '1971-03-03 01:01:01', 'test', 'advtest', 'vietest', 'noindex_test', 'urlTest', 'showTest', 'autoTest', '1971-03-03 01:01:01', '1971-03-03 01:01:01', '1971-03-03 01:01:01', 'combiTest', 'nightsTest', 'mealTest', 'autoStars', 'optest', 'chTest', 'chTest', 'chTest', 'ch', 'chTest', 'chTest', 'chTest'],
                     // Filter hidden from site
                     [4, 1, 'test offer 4', 'test offer info 4', '', 'T', date('Y-m-d H:i:s', strtotime('next year')), 40, 2, 1, 'test url 4', 'titleuk', 'infouk', 'content', 'contentuk', 'seo test', '', '', 'test discount', '', 'test type', 'test fly', 'transfer test', 'ins test', 'hot test', 'visa test', 'ptest', '1971-04-04 01:01:01', '1971-04-04 01:01:01', 'test', 'advtest', 'vietest', 'noindex_test', 'urlTest', 'showTest', 'autoTest', '1971-04-04 01:01:01', '1971-04-04 01:01:01', '1971-04-04 01:01:01', 'combiTest', 'nightsTest', 'mealTest', 'autoStars', 'optest', 'chTest', 'chTest', 'chTest', 'ch', 'chTest', 'chTest', 'chTest'],
                     // Filter city
