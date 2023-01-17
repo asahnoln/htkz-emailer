@@ -38,7 +38,6 @@ class DbOffer implements OfferInterface
             return null;
         }
 
-        // TODO: What price should be used? ForTour
         // TODO: Move out to a template
         $content = [];
         foreach ($data['tours'] as $tour) {
