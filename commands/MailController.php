@@ -24,9 +24,9 @@ class MailController extends \yii\console\Controller
         }
 
         while ($qm = $emailer->sendFromQueue($message, $queue)) {
-            $sent = $qm->sent ? 'is sent' : 'is not sent';
+            $sent = $qm->sent ? 'has been sent' : 'has not been sent';
             $settings = $qm->sent ? [Console::FG_GREEN] : [Console::BG_RED, Console::BOLD];
-            $this->stdout("{$qm->email} {$sent}\n", ...$settings);
+            $this->stdout("A letter to {$qm->email} {$sent}\n", ...$settings);
         }
 
         return ExitCode::OK;

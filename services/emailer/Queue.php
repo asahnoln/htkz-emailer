@@ -19,7 +19,7 @@ class Queue
 
         /** @var Subscriber $sub */
         foreach ($audience->findAll($city) as $sub) {
-            $qm = new QueueMessage($sub->id, $sub->email, 'hot test offer', 'hot test offer content');
+            $qm = new QueueMessage($sub->id, $sub->email, $offerMessage->title, $offerMessage->content);
             if ($this->store->send($qm)) {
                 ++$count;
             }
