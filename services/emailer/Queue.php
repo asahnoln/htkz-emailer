@@ -2,7 +2,6 @@
 
 namespace app\services\emailer;
 
-use Yii;
 use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\interfaces\OfferInterface;
 use app\services\emailer\interfaces\QueueStoreInterface;
@@ -18,7 +17,7 @@ class Queue
         $count = 0;
         $offerMessage = $offer->find($city);
         if (!$offerMessage) {
-            Yii::warning("Offer for city {$city} was not found, skipping");
+            \Yii::warning("Offer for city {$city} was not found, skipping");
 
             return 0;
         }

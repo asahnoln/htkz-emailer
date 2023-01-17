@@ -23,7 +23,7 @@ class DbAudienceTest extends \Codeception\Test\Unit
         \Yii::$app->db
             ->createCommand()
             ->batchInsert(
-                'tbl_mail',
+                '{{%mail}}',
                 ['id', 'email', 'city', 'active', 'del', 'site', 'place', 'type', 'addDate', 'activationSendDate', 'activationReadDate', 'reactivationSendDate', 'reactivationReadDate', 'del_type', 'delDate', 'restoreDate'],
                 [
                     [1, 'a@a.a', 1, 1, 0, 'test site', 'test place', 1, '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', 1, '1970-01-01 00:00:00', '1970-01-01 00:00:00'],
@@ -40,7 +40,7 @@ class DbAudienceTest extends \Codeception\Test\Unit
 
         \Yii::$app->db->createCommand()
             ->batchInsert(
-                'tbl_mail_message',
+                '{{%mail_message}}',
                 ['mail_id', 'title', 'titleBig', 'content', 'site', 'state', 'is_sending', 'chunk_sending_started_at', 'send_count', 'error_count', 'read_count', 'site_visit_count', 'previewEmail', 'addDate', 'activationDate', 'startDate', 'endDate', 'custom_file', 'activationToken',
                 ],
                 [

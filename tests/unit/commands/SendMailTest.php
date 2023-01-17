@@ -36,13 +36,13 @@ class SendMailTest extends \Codeception\Test\Unit
         // verify($result)->equals(ExitCode::OK);
 
         Yii::$app->db
-            ->createCommand('DELETE FROM tbl_city WHERE id > 3')
+            ->createCommand('DELETE FROM {{%city}} WHERE id > 3')
             ->execute();
 
         // Yii::$app->db
         //     ->createCommand()
         //     ->batchInsert(
-        //         'tbl_city',
+        //         '{{%city}}',
         //         ['id'],
         //         ['1'],
         //         ['2'],

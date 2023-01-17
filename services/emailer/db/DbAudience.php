@@ -15,7 +15,7 @@ class DbAudience implements AudienceInterface
     {
         $items = (new Query())
             ->select(['m.id', 'm.email', 'mm.endDate'])
-            ->from('tbl_mail m')
+            ->from('{{%mail}} m')
             ->leftJoin('{{%mail_message}} mm', 'm.id = mm.mail_id')
             ->where(['city' => $city, 'active' => 1, 'del' => 0])
             ->all()

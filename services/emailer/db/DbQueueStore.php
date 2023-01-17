@@ -10,7 +10,7 @@ class DbQueueStore implements QueueStoreInterface
 {
     public function send(QueueMessage $message): bool
     {
-        \Yii::$app->db->createCommand()->insert('tbl_mail_message', [
+        \Yii::$app->db->createCommand()->insert('{{%mail_message}}', [
             'mail_id' => $message->userId,
             'title' => $message->title,
             'titleBig' => $message->title,

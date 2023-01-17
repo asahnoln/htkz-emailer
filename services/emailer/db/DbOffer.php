@@ -17,7 +17,7 @@ class DbOffer implements OfferInterface
     {
         $offer = (new Query())
             ->select(['id', 'title', 'priority'])
-            ->from('tbl_post_original')
+            ->from('{{%post_original}}')
             ->where(['city_id' => $city, 'hidden_from_site' => 0])
             ->andWhere(['>', 'endDate', date('Y-m-d H:i:s')])
             ->orderBy(['priority' => SORT_DESC])

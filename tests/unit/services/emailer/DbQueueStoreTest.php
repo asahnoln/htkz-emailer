@@ -23,7 +23,7 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
         \Yii::$app->db
             ->createCommand()
             ->batchInsert(
-                'tbl_mail',
+                '{{%mail}}',
                 ['id', 'email', 'city', 'active', 'del', 'site', 'place', 'type', 'addDate', 'activationSendDate', 'activationReadDate', 'reactivationSendDate', 'reactivationReadDate', 'del_type', 'delDate', 'restoreDate'],
                 [
                     [1, 'a@a.a', 1, 1, 0, 'test site', 'test place', 1, '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', '1970-01-01 00:00:00', 1, '1970-01-01 00:00:00', '1970-01-01 00:00:00'],
@@ -45,7 +45,7 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
         $qm = new QueueMessage('2', 'test2@mail.com', 'Wow Offer', 'Offer Content');
         $qs->send($qm);
 
-        $msgs = \Yii::$app->db->createCommand('SELECT * FROM tbl_mail_message')->queryAll();
+        $msgs = \Yii::$app->db->createCommand('SELECT * FROM {{%mail_message}}')->queryAll();
         verify($msgs)->arrayCount(2);
         verify($msgs[0]['title'])->equals('Wow Offer');
         verify($msgs[0]['content'])->equals('Offer Content');
