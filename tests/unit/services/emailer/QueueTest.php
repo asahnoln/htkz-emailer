@@ -83,10 +83,10 @@ class QueueStoreStub implements QueueStoreInterface
     public function __construct(private bool $failing = false, private bool $empty = false)
     {
         $this->data = [
-            new QueueMessage('1', 'a@a.a', 'hot offer', 'hot content'),
-            new QueueMessage('2', 'b@a.a', 'hot offer', 'hot content'),
-            new QueueMessage('3', 'c@a.a', 'hottest offer', 'hottest content'),
-            new QueueMessage('4', 'd@a.a', 'hottest offer', 'hottest content'),
+            new QueueMessage('1', 'a@a.a', 'hot offer', 'hot content', '1'),
+            new QueueMessage('2', 'b@a.a', 'hot offer', 'hot content', '2'),
+            new QueueMessage('3', 'c@a.a', 'hottest offer', 'hottest content', '3'),
+            new QueueMessage('4', 'd@a.a', 'hottest offer', 'hottest content', '4'),
         ];
     }
 
@@ -104,6 +104,10 @@ class QueueStoreStub implements QueueStoreInterface
         }
 
         return array_pop($this->data);
+    }
+
+    public function finishState(QueueMessage $qm)
+    {
     }
 }
 

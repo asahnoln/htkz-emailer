@@ -100,9 +100,13 @@ class MailerSpy implements MailerInterface
 
     public function send($message): bool
     {
+        if ($this->failing) {
+            return false;
+        }
+
         $this->sentMessages[] = clone $message;
 
-        return !$this->failing;
+        return true;
     }
 
     public function sendMultiple(array $messages): int

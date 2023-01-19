@@ -24,4 +24,9 @@ interface QueueStoreInterface
      * @return ?QueueMessage Сообщение или null в случае пустой/недоступной очереди
      */
     public function receive(): ?QueueMessage;
+
+    /**
+     * Пометить состояние сообщения как завершенное.
+     */
+    public function finishState(QueueMessage $qm);
 }

@@ -80,9 +80,11 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
         $qs->send($qm2);
 
         $received = $qs->receive();
+        $received->id = null; // Don't check id, it's dynamic
         verify($received)->equals($qm2);
 
         $received = $qs->receive();
+        $received->id = null; // Don't check id, it's dynamic
         verify($received)->equals($qm1);
 
         verify($qs->receive())->null();

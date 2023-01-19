@@ -15,8 +15,9 @@ class QueueMessage
      * @param string $email   Email подписчика
      * @param string $title   Заголовок письма
      * @param string $content Содержимое письма
+     * @param string $id      ID рассылки
      */
-    public function __construct(public string $userId, public string $email, public string $title, public string $content)
+    public function __construct(public string $userId, public string $email, public string $title, public string $content, public ?string $id = null)
     {
     }
 }

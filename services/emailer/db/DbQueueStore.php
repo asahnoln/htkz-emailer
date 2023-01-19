@@ -64,6 +64,21 @@ class DbQueueStore implements QueueStoreInterface
         \Yii::$app->db->createCommand()
             ->update('{{%mail_message}}', ['state' => 1], 'id = :id')->bindValue(':id', $m['id'])->execute();
 
-        return new QueueMessage($m['mail_id'], $m['email'], $m['title'], $m['content']);
+        return new QueueMessage($m['mail_id'], $m['email'], $m['title'], $m['content'], $m['id']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function finishState(QueueMessage $qm): void
+    {
+        $updateSql = 'UPDATE {{%mail_message}} SET state = :state';
+        $state = 2;
+        if (!$qm->sent) {
+            $state = 3;
+            $updateSql .= ', error_count = error_count + 1';
+        }
+        \Yii::$app->db->createCommand($updateSql.' WHERE id = :id')
+            ->bindValues([':id' => $qm->id, ':state' => $state])->execute();
     }
 }
