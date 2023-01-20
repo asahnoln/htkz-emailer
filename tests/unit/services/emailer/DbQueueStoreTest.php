@@ -90,6 +90,30 @@ class DbQueueStoreTest extends \Codeception\Test\Unit
         verify($qs->receive())->null();
     }
 
+    public function testQueueRace(): void
+    {
+        $qs = new DbQueueStore();
+        verify($qs)->instanceOf(QueueStoreInterface::class);
+
+        $qm1 = new QueueMessage('1', 'a@a.a', 'Wow Offer', 'Offer Content');
+        $qs->send($qm1);
+        $qm2 = new QueueMessage('2', 'b@b.b', 'Wow Offer 2', 'Offer Content 2');
+        $qs->send($qm2);
+
+        $fiber = new \Fiber(function () use ($qs, $qm2): void {
+            $received = $qs->receive();
+            $received->id = null; // Don't check id, it's dynamic
+            verify($received)->equals($qm2);
+        });
+
+        $fiber->start();
+        $received = $qs->receive();
+        $received->id = null; // Don't check id, it's dynamic
+        verify($received)->equals($qm1);
+
+        verify($qs->receive())->null();
+    }
+
     protected function _before(): void
     {
         $this->createMails();
