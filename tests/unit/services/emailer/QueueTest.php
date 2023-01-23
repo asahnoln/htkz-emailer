@@ -106,7 +106,7 @@ class QueueStoreStub implements QueueStoreInterface
         return array_pop($this->data);
     }
 
-    public function finishState(QueueMessage $qm)
+    public function finishState(QueueMessage $qm): void
     {
     }
 }
