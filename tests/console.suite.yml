@@ -7,3 +7,4 @@ modules:
   config:
     Yii2:
       configFile: "config/test_console.php"
+      applicationClass: yii\console\Application
