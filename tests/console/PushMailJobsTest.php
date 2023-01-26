@@ -2,18 +2,7 @@
 
 namespace commands;
 
-use app\commands\MailController;
-use app\services\emailer\db\DbAudience;
-use app\services\emailer\db\DbOffer;
-use app\services\emailer\db\DbQueueStore;
-use app\services\emailer\Emailer;
-use tests\unit\services\emailer\AnalyticsStub;
-use tests\unit\services\emailer\MailerSpy;
 use yii\console\ExitCode;
-use yii\httpclient\Client;
-use yii\httpclient\Request;
-use yii\httpclient\Response;
-use yii\symfonymailer\Message;
 
 /**
  * @internal

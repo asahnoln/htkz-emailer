@@ -1,4 +1,5 @@
 actor: Tester
+error_level: E_ALL
 bootstrap: _bootstrap.php
 paths:
   tests: tests

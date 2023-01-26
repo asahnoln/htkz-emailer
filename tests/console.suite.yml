@@ -1,0 +1,6 @@
+actor: ConsoleTester
+modules:
+  enabled:
+    - \Helper\Console
+    - Asserts
+    - Yii2
