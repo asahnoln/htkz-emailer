@@ -27,7 +27,6 @@ interface QueueStoreInterface
 
     /**
      * Пометить состояние сообщения как завершенное.
-     * @return void
      */
     public function finishState(QueueMessage $qm): void;
 }

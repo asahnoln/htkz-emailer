@@ -9,7 +9,7 @@ use yii\db\Query;
 /**
  * Аудитория, хранимая в БД.
  */
-class DbAudience implements AudienceInterface
+class AudienceRepository implements AudienceInterface
 {
     /**
      * {@inheritdoc}

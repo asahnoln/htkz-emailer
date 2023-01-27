@@ -2,23 +2,16 @@
 
 namespace app\commands;
 
+use app\services\emailer\OfferEmailer;
 use yii\console\ExitCode;
-use yii\queue\JobInterface;
 use yii\queue\cli\Queue as CliQueue;
 
 class MailController extends \yii\console\Controller
 {
-    public function actionPush(CliQueue $q): int
+    public function actionPush(OfferEmailer $of, CliQueue $q): int
     {
-        $q->push(new MailJob());
-        $q->push(new MailJob());
-        return ExitCode::OK;
-    }
-}
+        $of->push($q);
 
-class MailJob implements JobInterface
-{
-    public function execute($queue): mixed
-    {
+        return ExitCode::OK;
     }
 }

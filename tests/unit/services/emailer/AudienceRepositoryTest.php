@@ -2,7 +2,7 @@
 
 namespace tests\unit\services\emailer;
 
-use app\services\emailer\db\DbAudience;
+use app\services\emailer\db\AudienceRepository;
 use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\Subscriber;
 
@@ -11,7 +11,7 @@ use app\services\emailer\Subscriber;
  *
  * @coversNothing
  */
-class DbAudienceTest extends \Codeception\Test\Unit
+class AudienceRepositoryTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
@@ -38,11 +38,11 @@ class DbAudienceTest extends \Codeception\Test\Unit
             ->execute()
         ;
 
-        \Yii::$app->db->createCommand()
+        \Yii::$app->db
+            ->createCommand()
             ->batchInsert(
                 '{{%mail_message}}',
-                ['mail_id', 'title', 'titleBig', 'content', 'site', 'state', 'is_sending', 'chunk_sending_started_at', 'send_count', 'error_count', 'read_count', 'site_visit_count', 'previewEmail', 'addDate', 'activationDate', 'startDate', 'endDate', 'custom_file', 'activationToken',
-                ],
+                ['mail_id', 'title', 'titleBig', 'content', 'site', 'state', 'is_sending', 'chunk_sending_started_at', 'send_count', 'error_count', 'read_count', 'site_visit_count', 'previewEmail', 'addDate', 'activationDate', 'startDate', 'endDate', 'custom_file', 'activationToken'],
                 [
                     [7, 'mail test', 'mail test', 'mail content', 1, 0, 0, '1970-01-01 00:00:00', 0, 0, 0, 0, '', date('Y-m-d H:i:s'), '1970-01-01 00:00:00', date('Y-m-d H:i:s'), date('Y-m-d H:i:s', strtotime('5 days ago')), '', ''], // sent during the week, must be ignored
                     [1, 'mail test', 'mail test', 'mail content', 1, 0, 0, '1970-01-01 00:00:00', 0, 0, 0, 0, '', date('Y-m-d H:i:s'), '1970-01-01 00:00:00', date('Y-m-d H:i:s'), date('Y-m-d H:i:s', strtotime('8 days ago')), '', ''], // sent more than week before, must be queried
@@ -58,7 +58,7 @@ class DbAudienceTest extends \Codeception\Test\Unit
     {
         $this->createMails();
 
-        $a = new DbAudience();
+        $a = new AudienceRepository();
 
         $result = $a->findAll('1');
 

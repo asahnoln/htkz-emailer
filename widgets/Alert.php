@@ -6,7 +6,7 @@ use Yii;
 
 /**
  * Alert widget renders a message from session flash. All flash messages are displayed
- * in the sequence they were assigned using setFlash. You can set message as following:
+ * in the sequence they were assigned using setFlash. You can set message as following:.
  *
  * ```php
  * Yii::$app->session->setFlash('error', 'This is the message');
@@ -27,9 +27,9 @@ class Alert extends \yii\bootstrap5\Widget
 {
     /**
      * @var array the alert types configuration for the flash messages.
-     * This array is setup as $key => $value, where:
-     * - key: the name of the session flash variable
-     * - value: the bootstrap alert type (i.e. danger, success, info, warning)
+     *            This array is setup as $key => $value, where:
+     *            - key: the name of the session flash variable
+     *            - value: the bootstrap alert type (i.e. danger, success, info, warning)
      */
     public $alertTypes = [
         'error' => 'alert-danger',
@@ -41,7 +41,7 @@ class Alert extends \yii\bootstrap5\Widget
 
     /**
      * @var array the options for rendering the close button tag.
-     * Array will be passed to [[\yii\bootstrap\Alert::closeButton]].
+     *            Array will be passed to [[\yii\bootstrap\Alert::closeButton]].
      */
     public $closeButton = [];
 
@@ -50,7 +50,7 @@ class Alert extends \yii\bootstrap5\Widget
      */
     public function run()
     {
-        $session = Yii::$app->session;
+        $session = \Yii::$app->session;
         $appendClass = isset($this->options['class']) ? ' '.$this->options['class'] : '';
 
         foreach (array_keys($this->alertTypes) as $type) {

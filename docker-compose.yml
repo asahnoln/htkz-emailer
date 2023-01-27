@@ -47,3 +47,11 @@ services:
       - PMA_HOST=mysql_test
     depends_on:
       - mysql_test
+  rabbitmq:
+    image: rabbitmq:3.9.27
+    ports:
+      - 5672:5672
+  #   networks:
+  #     net: {}
+  # networks:
+  #   - yii2_queue_net

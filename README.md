@@ -122,7 +122,7 @@ docker-compose run --rm php vendor/bin/codecept run
 
 Аудитория, которой нужно рассылать письма. Находится по городу.
 
-#### app\services\emailer\db\DbAudience
+#### app\services\emailer\db\AudienceRepository
 
 Аудитория, хранимая в БД.
 
@@ -258,11 +258,11 @@ Edit the file `config/db.php` with real data, for example:
 
 ```php
 return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-    'username' => 'root',
-    'password' => '1234',
-    'charset' => 'utf8',
+  "class" => "yii\db\Connection",
+  "dsn" => "mysql:host=localhost;dbname=yii2basic",
+  "username" => "root",
+  "password" => "1234",
+  "charset" => "utf8",
 ];
 ```
 
