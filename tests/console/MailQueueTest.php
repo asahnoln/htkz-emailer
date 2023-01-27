@@ -24,7 +24,7 @@ class MailQueueTest extends \Codeception\Test\Unit
     {
         $this->createMails();
 
-        $qs = new QueueStub();
+        $qs = new \QueueStub();
         \Yii::$container->setSingletons([
             CliQueue::class => fn () => $qs,
         ]);
@@ -82,20 +82,5 @@ class MailQueueTest extends \Codeception\Test\Unit
 
     protected function _after(): void
     {
-    }
-}
-
-class QueueStub extends CliQueue
-{
-    public array $msgs = [];
-
-    public function status($id): int
-    {
-        return CliQueue::STATUS_DONE;
-    }
-
-    protected function pushMessage($message, $ttr, $delay, $priority): string
-    {
-        return array_push($this->msgs, $message) - 1;
     }
 }

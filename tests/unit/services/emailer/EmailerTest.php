@@ -3,7 +3,6 @@
 namespace tests\unit\services\emailer;
 
 use app\services\emailer\Emailer;
-use app\services\emailer\interfaces\AnalyticsInterface;
 use yii\mail\MailerInterface;
 use yii\mail\MessageInterface;
 use yii\symfonymailer\Message;
@@ -24,7 +23,7 @@ class EmailerTest extends \Codeception\Test\Unit
     public function testSendFromQueue(): void
     {
         $m = new MailerSpy();
-        $a = new AnalyticsStub();
+        $a = new \AnalyticsStub();
         $baseMessage = new Message();
 
         $e = new Emailer($m, $a);
@@ -40,7 +39,7 @@ class EmailerTest extends \Codeception\Test\Unit
     public function testDontSendIfMailFail(): void
     {
         $m = new MailerSpy(failing: true);
-        $a = new AnalyticsStub();
+        $a = new \AnalyticsStub();
         $baseMessage = new Message();
 
         $e = new Emailer($m, $a);
@@ -91,18 +90,5 @@ class MailerSpy implements MailerInterface
     public function sendMultiple(array $messages): int
     {
         return 0;
-    }
-}
-
-class AnalyticsStub implements AnalyticsInterface
-{
-    /** @var int[] */
-    public array $ids = [];
-
-    public function send(string $id): bool
-    {
-        $this->ids[] = $id;
-
-        return true;
     }
 }
