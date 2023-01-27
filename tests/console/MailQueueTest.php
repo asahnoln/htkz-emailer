@@ -2,6 +2,7 @@
 
 namespace commands;
 
+use app\services\emailer\jobs\MailJob;
 use Yii;
 use yii\console\ExitCode;
 use yii\queue\cli\Queue as CliQueue;
@@ -31,6 +32,7 @@ class MailQueueTest extends \Codeception\Test\Unit
         verify($result)->equals(ExitCode::OK);
 
         verify($qs->msgs)->arrayCount(4);
+        verify(unserialize($qs->msgs[0]))->instanceOf(MailJob::class);
     }
 
     public function createMails(): void
