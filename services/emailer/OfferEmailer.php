@@ -10,10 +10,13 @@ class OfferEmailer
 {
     public function push(CliQueue $q): void
     {
+        $cities = \Yii::$app->db->createCommand('SELECT * FROM {{%city}}')->queryAll();
         $a = new AudienceRepository();
 
-        foreach ($a->findAll(1) as $sub) {
-            $q->push(new MailJob());
+        foreach ($cities as $c) {
+            foreach ($a->findAll($c['id']) as $sub) {
+                $q->push(new MailJob());
+            }
         }
     }
 }

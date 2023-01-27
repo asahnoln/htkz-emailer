@@ -8,9 +8,9 @@ use yii\queue\cli\Queue as CliQueue;
 
 class MailController extends \yii\console\Controller
 {
-    public function actionPush(OfferEmailer $of, CliQueue $q): int
+    public function actionPush(CliQueue $q): int
     {
-        $of->push($q);
+        (new OfferEmailer())->push($q);
 
         return ExitCode::OK;
     }
