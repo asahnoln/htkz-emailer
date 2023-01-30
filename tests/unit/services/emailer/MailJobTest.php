@@ -23,7 +23,7 @@ class MailJobTest extends \Codeception\Test\Unit
         $m = new MailerSpy();
         $a = new \AnalyticsStub();
         $e = new Emailer($m, $a);
-        $mj = new MailJob($e, 'test@mail.com');
+        $mj = new MailJob($e, 'test@mail.com', '4');
 
         $q = new \QueueStub();
         $mj->execute($q);

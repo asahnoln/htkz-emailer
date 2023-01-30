@@ -5,7 +5,9 @@ namespace commands;
 use app\services\emailer\jobs\MailJob;
 use Yii;
 use yii\console\ExitCode;
+use yii\mail\MailerInterface;
 use yii\queue\cli\Queue as CliQueue;
+use yii\symfonymailer\Mailer;
 
 /**
  * @internal
@@ -27,6 +29,15 @@ class MailQueueTest extends \Codeception\Test\Unit
         $qs = new \QueueStub();
         \Yii::$container->setSingletons([
             CliQueue::class => fn () => $qs,
+        ]);
+        \Yii::$container->setDefinitions([
+            MailerInterface::class => [
+                'class' => Mailer::class,
+                'viewPath' => '@app/mail',
+                // send all mails to a file by default.
+                'useFileTransport' => true,
+                'messageClass' => 'yii\symfonymailer\Message',
+            ],
         ]);
         $result = \Yii::$app->createControllerByID('mail')->run('push');
         verify($result)->equals(ExitCode::OK);

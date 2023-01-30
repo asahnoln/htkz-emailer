@@ -1,9 +1,13 @@
 <?php
 
 // use yii\queue\amqp_interop\Queue;
-use app\services\emailer\interfaces\AudienceInterface;
-use app\services\emailer\OfferEmailer;
+use app\services\emailer\Amplitude;
+use app\services\emailer\Emailer;
+use app\services\emailer\interfaces\AnalyticsInterface;
 use yii\di\Instance;
+use yii\httpclient\Client;
+use yii\mail\MailerInterface;
+use yii\symfonymailer\Mailer;
 
 $params = require __DIR__.'/params.php';
 $db = require __DIR__.'/db.php';
@@ -41,6 +45,7 @@ $config = [
     ],
     'container' => [
         'definitions' => [
+            // Emailer::class => Emailer::class,
             // CliQueue::class => [
             //     'class' => Queue::class,
             //     'driver' => Queue::ENQUEUE_AMQP_LIB,
@@ -55,32 +60,32 @@ $config = [
             //     ],
             // ],
             // QueueStoreInterface::class => DbQueueStore::class,
-            // MailerInterface::class => [
-            //     'class' => Mailer::class,
-            //     'transport' => [
-            //         'dsn' => $_ENV['MAILER_TRANSPORT_DSN'],
-            //     ],
-            // ],
-            // AnalyticsInterface::class => [
-            //     'class' => Amplitude::class,
-            //     '__construct()' => [
-            //         Instance::of(Client::class),
-            //         $_ENV['AMPLITUDE_URL'],
-            //         $_ENV['AMPLITUDE_KEY'],
-            //     ],
-            // ],
+            MailerInterface::class => [
+                'class' => Mailer::class,
+                'transport' => [
+                    'dsn' => $_ENV['MAILER_TRANSPORT_DSN'],
+                ],
+            ],
+            AnalyticsInterface::class => [
+                'class' => Amplitude::class,
+                '__construct()' => [
+                    Instance::of(Client::class),
+                    $_ENV['AMPLITUDE_URL'],
+                    $_ENV['AMPLITUDE_KEY'],
+                ],
+            ],
             // MessageInterface::class => [
             //     'class' => Message::class,
             //     'from' => $_ENV['MESSAGE_FROM'],
             // ],
         ],
         'singletons' => [
-            OfferEmailer::class => [
-                'class' => OfferEmailer::class,
+            Emailer::class => [
+                'class' => Emailer::class,
                 '__construct()' => [
                     // Instance::of(AudienceInterface::class),
-                    // Instance::of(MailerInterface::class),
-                    // Instance::of(AnalyticsInterface::class),
+                    Instance::of(MailerInterface::class),
+                    Instance::of(AnalyticsInterface::class),
                 ],
             ],
         ],

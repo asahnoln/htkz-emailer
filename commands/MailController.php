@@ -2,15 +2,14 @@
 
 namespace app\commands;
 
-use app\services\emailer\OfferEmailer;
+use app\services\emailer\EmailerQueueService;
 use yii\console\ExitCode;
-use yii\queue\cli\Queue as CliQueue;
 
 class MailController extends \yii\console\Controller
 {
-    public function actionPush(CliQueue $q): int
+    public function actionPush( ): int
     {
-        (new OfferEmailer())->push($q);
+        (new EmailerQueueService())->push();
 
         return ExitCode::OK;
     }
