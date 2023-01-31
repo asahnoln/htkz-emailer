@@ -28,10 +28,9 @@ class EmailerQueueService
 
         foreach ($cities as $city) {
             $offer = $this->offer->find($city['id']);
-            codecept_debug($offer);
-            // if (!$offer) {
-            //     return;
-            // }
+            if (!$offer) {
+                return;
+            }
 
             foreach ($ar->findAll($city['id']) as $sub) {
                 $this->queue->push(new MailJob($this->emailer, $sub->email, $sub->id));
