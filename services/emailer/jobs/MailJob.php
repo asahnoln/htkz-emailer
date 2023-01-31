@@ -18,9 +18,9 @@ class MailJob implements JobInterface
     public const STATE_DONE = 2;
 
     /**
-     * @param Emailer $emailer Отправщик письма и аналитики
-     * @param SubscriberEntity $sub Подписчик
-     * @param OfferEntity $offer Оффер
+     * @param Emailer          $emailer Отправщик письма и аналитики
+     * @param SubscriberEntity $sub     Подписчик
+     * @param OfferEntity      $offer   Оффер
      */
     public function __construct(private Emailer $emailer, private SubscriberEntity $sub, private OfferEntity $offer)
     {
