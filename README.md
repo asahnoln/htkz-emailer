@@ -47,10 +47,10 @@ cp .env.example .env
 - [x] Datetime для дат
 - [x] Repository для работы с БД
 - [x] Entity название для сущностей
-- [ ] Offer check for week
+- [x] Проверка оффера на неделю, а не mail_message
 - [x] string city -> int
-- [ ] Use payload instead of plain content
-- [x] Использовать RabbitMQ в качестве очереди
+- [x] Use payload instead of plain content
+- [x] Использовать Yii2 Queue в качестве очереди
 - [ ] Проверка необходимости сокращения заголовка письма
 - [ ] Подтвердить данные в записях полей tbl_mail_message
 
@@ -80,9 +80,15 @@ docker-compose run --rm php vendor/bin/codecept run
 
 Все основные объекты находятся в `services/emailer`.
 
+### EmailerQueueService
+
+Сервис постановки отправки письма в очередь.
+
 ### Emailer
 
 Сервис рассылки, который получает письма из очереди и шлет их клиентам.
+
+## Сущности
 
 ### SubscriberEntity
 

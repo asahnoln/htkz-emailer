@@ -31,8 +31,6 @@ class EmailerTest extends \Codeception\Test\Unit
         verify($result)->true();
         verify($m->sentMessages)->arrayCount(1);
         verify($m->sentMessages[0]->getTo())->arrayHasKey('d@a.a');
-        // verify($m->sentMessages[0]->getSubject())->equals('hottest offer');
-        // verify($baseMessage->getTextBody())->equals('hottest content');
         verify($a->ids[0])->equals('4');
     }
 

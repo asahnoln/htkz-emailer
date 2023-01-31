@@ -8,6 +8,9 @@ use app\services\emailer\repositories\AudienceRepository;
 use app\services\emailer\repositories\CityRepository;
 use yii\queue\cli\Queue as CliQueue;
 
+/**
+ * Сервис постановки отправки письма в очередь.
+ */
 class EmailerQueueService
 {
     private Emailer $emailer;
@@ -21,6 +24,9 @@ class EmailerQueueService
         $this->offer = \Yii::$container->get(OfferInterface::class);
     }
 
+    /**
+     * Отправить в очередь джобу на отправку письма.
+     */
     public function push(): void
     {
         $cities = (new CityRepository())->findAll();
@@ -39,6 +45,13 @@ class EmailerQueueService
         }
     }
 
+    /**
+     * Логгировать в БД отсылку почты.
+     *
+     * @param int    $mailId  ID подписчика
+     * @param string $title   Заголовок письма
+     * @param string $content Контент письма
+     */
     protected function logToDb(int $mailId, string $title, string $content): void
     {
         $date = (new \DateTime())->format('Y-m-d H:i:s');

@@ -26,10 +26,6 @@ class AudienceRepository implements AudienceInterface
 
         $subs = [];
         foreach ($items as $item) {
-            if (strtotime($item['endDate'] ?? '') > strtotime('7 days ago')) {
-                continue;
-            }
-
             $subs[] = new SubscriberEntity($item['email'], $item['id']);
         }
 

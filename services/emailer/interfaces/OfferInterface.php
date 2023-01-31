@@ -12,7 +12,7 @@ interface OfferInterface
     /**
      * Найти оффер по городу.
      *
-     * @param string $city Город оффера (идентификатор)
+     * @param int $city Город оффера (идентификатор)
      *
      * @return ?OfferEntity Сообщение оффера или null
      */

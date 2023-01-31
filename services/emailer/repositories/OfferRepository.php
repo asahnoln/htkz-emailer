@@ -38,7 +38,6 @@ class OfferRepository implements OfferInterface
             return null;
         }
 
-        // TODO: Move out to a template
         $payload = [];
         foreach ($data['tours'] as $tour) {
             $payload[] = [
@@ -53,7 +52,7 @@ class OfferRepository implements OfferInterface
     /**
      * Найти оффер в БД по городу.
      *
-     * @param string $city Город
+     * @param int $city ID города
      *
      * @return array|bool Массив с данными или false в отрицательном случае
      */
@@ -64,6 +63,7 @@ class OfferRepository implements OfferInterface
             ->from('{{%post_original}}')
             ->where(['city_id' => $city, 'hidden_from_site' => 0])
             ->andWhere(['>', 'endDate', (new \DateTime())->format('Y-m-d H:i:s')])
+            ->andWhere(['<', 'mail_end_date', (new \DateTime())->sub(new \DateInterval('P7D'))->format('Y-m-d H:i:s')])
             ->orderBy(['priority' => SORT_DESC])
             ->one()
         ;
