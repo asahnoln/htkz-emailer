@@ -14,7 +14,7 @@ class AudienceRepository implements AudienceInterface
     /**
      * {@inheritdoc}
      */
-    public function findAll(string $city): array
+    public function findAll(int $city): array
     {
         $items = (new Query())
             ->select(['m.id', 'm.email', 'mm.endDate'])

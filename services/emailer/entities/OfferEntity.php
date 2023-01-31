@@ -1,12 +1,11 @@
 <?php
 
-namespace app\services\emailer;
+namespace app\services\emailer\entities;
 
-// TODO: In future, we need an ID here as well I guess
 /**
  * Сообщение оффера (заголовок, текст).
  */
-class OfferMessage
+class OfferEntity
 {
     /**
      * @param string $title   Заголовок письма

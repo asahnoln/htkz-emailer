@@ -2,8 +2,8 @@
 
 namespace app\services\emailer\repositories;
 
+use app\services\emailer\entities\OfferEntity;
 use app\services\emailer\interfaces\OfferInterface;
-use app\services\emailer\OfferMessage;
 use yii\db\Query;
 use yii\httpclient\Client;
 
@@ -24,7 +24,7 @@ class OfferRepository implements OfferInterface
     /**
      * {@inheritdoc}
      */
-    public function find(string $city): ?OfferMessage
+    public function find(int $city): ?OfferEntity
     {
         $offer = $this->findOffer($city);
         if (!$offer) {
@@ -44,7 +44,7 @@ class OfferRepository implements OfferInterface
             $content[] = "{$tour['hotel']['name']} - {$tour['price']['forTour']}";
         }
 
-        return new OfferMessage($offer['title'], implode("\n", $content));
+        return new OfferEntity($offer['title'], implode("\n", $content));
     }
 
     /**
@@ -54,7 +54,7 @@ class OfferRepository implements OfferInterface
      *
      * @return array|bool Массив с данными или false в отрицательном случае
      */
-    protected function findOffer(string $city): array|bool
+    protected function findOffer(int $city): array|bool
     {
         return (new Query())
             ->select(['id', 'title', 'priority'])

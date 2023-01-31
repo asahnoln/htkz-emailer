@@ -32,26 +32,26 @@ cp .env.example .env
 
 ## Запуск команды
 
+Отправить всю почту в очередь
+
 ```fish
-./yii mail/send
+./yii mail/push
 ```
 
 # Разработка
 
 ## TODO
 
-- [ ] Убрать из коснольной команды зависимости
-- [ ] Логику перенести в сервис
+- [x] Убрать из коснольной команды зависимости
+- [x] Логику перенести в сервис
 - [ ] Datetime для дат
-- [ ] Repository для работы с БД
+- [x] Repository для работы с БД
 - [ ] Entity название для сущностей
 - [ ] Offer check for week
-- [ ] string city -> int
+- [x] string city -> int
 - [ ] Use payload instead of plain content
-
-- [ ] Использовать RabbitMQ в качестве очереди
+- [x] Использовать RabbitMQ в качестве очереди
 - [ ] Проверка необходимости сокращения заголовка письма
-- [ ] Тестировать одновременное обращение к записи рассылки в БД (лочить БД при чтении записи рассылки)
 - [ ] Подтвердить данные в записях полей tbl_mail_message
 
 Перед начало разработки нужно обязательно создать файл `.env`.
@@ -83,14 +83,6 @@ docker-compose run --rm php vendor/bin/codecept run
 ### Emailer
 
 Сервис рассылки, который получает письма из очереди и шлет их клиентам.
-
-### Queue
-
-Очередь, которая сохраняет данные в источник очередей и достает оттуда.
-
-### QueueMessage
-
-Сообщение очереди, содержащее данные для рассылки (почту, заголовк и т.д.)
 
 ### Subscriber
 
@@ -139,14 +131,6 @@ docker-compose run --rm php vendor/bin/codecept run
 | yii\httpclient\Client $client | HTTP-клиент для запросов к HT API |
 | string $url                   | Ссылка на endpoint в HT API       |
 | string $key                   | Токен для запросов в HT API       |
-
-### QueueStoreInterface
-
-Источник очереди. Сохраняет и получает сообщения.
-
-#### app\services\emailer\db\DbQueueStore
-
-Очередь реализованная в БД.
 
 # YII INFO
 

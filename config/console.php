@@ -4,6 +4,8 @@
 use app\services\emailer\Amplitude;
 use app\services\emailer\Emailer;
 use app\services\emailer\interfaces\AnalyticsInterface;
+use app\services\emailer\interfaces\OfferInterface;
+use app\services\emailer\repositories\OfferRepository;
 use yii\di\Instance;
 use yii\httpclient\Client;
 use yii\mail\MailerInterface;
@@ -51,14 +53,14 @@ $config = [
             //     'driver' => Queue::ENQUEUE_AMQP_LIB,
             // ],
             // AudienceInterface::class => AudienceRepository::class,
-            // OfferInterface::class => [
-            //     'class' => DbOffer::class,
-            //     '__construct()' => [
-            //         Instance::of(Client::class),
-            //         $_ENV['API_URL'],
-            //         $_ENV['API_KEY'],
-            //     ],
-            // ],
+            OfferInterface::class => [
+                'class' => OfferRepository::class,
+                '__construct()' => [
+                    Instance::of(Client::class),
+                    $_ENV['API_URL'],
+                    $_ENV['API_KEY'],
+                ],
+            ],
             // QueueStoreInterface::class => DbQueueStore::class,
             MailerInterface::class => [
                 'class' => Mailer::class,
