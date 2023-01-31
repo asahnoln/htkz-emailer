@@ -1,0 +1,10 @@
+actor: ConsoleTester
+modules:
+  enabled:
+    - \Helper\Console
+    - Asserts
+    - Yii2
+  config:
+    Yii2:
+      configFile: "config/test_console.php"
+      applicationClass: yii\console\Application

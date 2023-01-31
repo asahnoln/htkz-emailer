@@ -30,19 +30,32 @@ cp .env.example .env
 | MESSAGE_FROM         | test@example.com                   | От кого отправлять письма подписчикам                                    |
 | PHP_ENABLE_XDEBUG    | 0                                  | Включить XDEBUG в докере для проверки покрытия тестов (пока не работает) |
 
+### Миграции
+
+В директории `/migrations` находятся необходимые миграции для БД.
+
 ## Запуск команды
 
+Отправить всю почту в очередь
+
 ```fish
-./yii mail/send
+./yii mail/push
 ```
 
 # Разработка
 
 ## TODO
 
-- [ ] Использовать RabbitMQ в качестве очереди
+- [x] Убрать из коснольной команды зависимости
+- [x] Логику перенести в сервис
+- [x] Datetime для дат
+- [x] Repository для работы с БД
+- [x] Entity название для сущностей
+- [x] Проверка оффера на неделю, а не mail_message
+- [x] string city -> int
+- [x] Use payload instead of plain content
+- [x] Использовать Yii2 Queue в качестве очереди
 - [ ] Проверка необходимости сокращения заголовка письма
-- [ ] Тестировать одновременное обращение к записи рассылки в БД (лочить БД при чтении записи рассылки)
 - [ ] Подтвердить данные в записях полей tbl_mail_message
 
 Перед начало разработки нужно обязательно создать файл `.env`.
@@ -71,23 +84,21 @@ docker-compose run --rm php vendor/bin/codecept run
 
 Все основные объекты находятся в `services/emailer`.
 
+### EmailerQueueService
+
+Сервис постановки отправки письма в очередь.
+
 ### Emailer
 
 Сервис рассылки, который получает письма из очереди и шлет их клиентам.
 
-### Queue
+## Сущности
 
-Очередь, которая сохраняет данные в источник очередей и достает оттуда.
-
-### QueueMessage
-
-Сообщение очереди, содержащее данные для рассылки (почту, заголовк и т.д.)
-
-### Subscriber
+### SubscriberEntity
 
 Подписчик на рассылку из аудитории.
 
-### OfferMessage
+### OfferEntity
 
 Сообщение оффера (заголовок, текст).
 
@@ -113,7 +124,7 @@ docker-compose run --rm php vendor/bin/codecept run
 
 Аудитория, которой нужно рассылать письма. Находится по городу.
 
-#### app\services\emailer\db\DbAudience
+#### app\services\emailer\repositories\AudienceRepository
 
 Аудитория, хранимая в БД.
 
@@ -121,7 +132,7 @@ docker-compose run --rm php vendor/bin/codecept run
 
 Оффер для рассылки аудитории. Находится по городу.
 
-#### app\services\emailer\db\DbOffer
+#### app\services\emailer\repositories\OfferRepository
 
 Оффер, хранимый в БД и обращающийся к HT API за информацией о турах для составления текста письма.
 
@@ -130,14 +141,6 @@ docker-compose run --rm php vendor/bin/codecept run
 | yii\httpclient\Client $client | HTTP-клиент для запросов к HT API |
 | string $url                   | Ссылка на endpoint в HT API       |
 | string $key                   | Токен для запросов в HT API       |
-
-### QueueStoreInterface
-
-Источник очереди. Сохраняет и получает сообщения.
-
-#### app\services\emailer\db\DbQueueStore
-
-Очередь реализованная в БД.
 
 # YII INFO
 
@@ -249,11 +252,11 @@ Edit the file `config/db.php` with real data, for example:
 
 ```php
 return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-    'username' => 'root',
-    'password' => '1234',
-    'charset' => 'utf8',
+  "class" => "yii\db\Connection",
+  "dsn" => "mysql:host=localhost;dbname=yii2basic",
+  "username" => "root",
+  "password" => "1234",
+  "charset" => "utf8",
 ];
 ```
 

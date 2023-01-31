@@ -9,19 +9,19 @@
  * // @property of \vendor\package\Rollbar goes here
  * class __Rollbar {
  * }
- * ```
+ * ```.
  */
 class Yii
 {
     /**
-     * @var \yii\web\Application|\yii\console\Application|__Application
+     * @var __Application|\yii\console\Application|\yii\web\Application
      */
     public static $app;
 }
 
 /**
- * @property yii\rbac\DbManager $authManager
- * @property \yii\web\User|__WebUser $user
+ * @property yii\rbac\DbManager      $authManager
+ * @property __WebUser|\yii\web\User $user
  */
 class __Application
 {

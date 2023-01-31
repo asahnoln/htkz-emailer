@@ -4,7 +4,7 @@ use yii\db\Migration;
 
 /**
  * Handles adding columns to table `{{%mail_message}}`.
- * Has foreign keys to the tables:
+ * Has foreign keys to the tables:.
  *
  * - `{{%mail}}`
  */

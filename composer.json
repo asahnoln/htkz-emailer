@@ -21,7 +21,7 @@
         "vlucas/phpdotenv": "^5.5",
         "yiisoft/yii2-httpclient": "^2.0",
         "yiisoft/yii2-queue": "^2.3",
-        "php-amqplib/php-amqplib": "^2.8"
+        "enqueue/amqp-lib": "^0.8.42"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

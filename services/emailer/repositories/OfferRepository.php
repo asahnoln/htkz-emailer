@@ -1,16 +1,16 @@
 <?php
 
-namespace app\services\emailer\db;
+namespace app\services\emailer\repositories;
 
+use app\services\emailer\entities\OfferEntity;
 use app\services\emailer\interfaces\OfferInterface;
-use app\services\emailer\OfferMessage;
 use yii\db\Query;
 use yii\httpclient\Client;
 
 /**
  * Оффер, хранимый в БД и обращающийся к HT API за информацией о турах для составления текста письма.
  */
-class DbOffer implements OfferInterface
+class OfferRepository implements OfferInterface
 {
     /**
      * @param Client $client HTTP-клиент для запросов к HT API
@@ -24,7 +24,7 @@ class DbOffer implements OfferInterface
     /**
      * {@inheritdoc}
      */
-    public function find(string $city): ?OfferMessage
+    public function find(int $city): ?OfferEntity
     {
         $offer = $this->findOffer($city);
         if (!$offer) {
@@ -38,29 +38,32 @@ class DbOffer implements OfferInterface
             return null;
         }
 
-        // TODO: Move out to a template
-        $content = [];
+        $payload = [];
         foreach ($data['tours'] as $tour) {
-            $content[] = "{$tour['hotel']['name']} - {$tour['price']['forTour']}";
+            $payload[] = [
+                'name' => $tour['hotel']['name'],
+                'price' => $tour['price']['forTour'],
+            ];
         }
 
-        return new OfferMessage($offer['title'], implode("\n", $content));
+        return new OfferEntity($offer['title'], $payload);
     }
 
     /**
      * Найти оффер в БД по городу.
      *
-     * @param string $city Город
+     * @param int $city ID города
      *
      * @return array|bool Массив с данными или false в отрицательном случае
      */
-    protected function findOffer(string $city): array|bool
+    protected function findOffer(int $city): array|bool
     {
         return (new Query())
             ->select(['id', 'title', 'priority'])
             ->from('{{%post_original}}')
             ->where(['city_id' => $city, 'hidden_from_site' => 0])
-            ->andWhere(['>', 'endDate', date('Y-m-d H:i:s')])
+            ->andWhere(['>', 'endDate', (new \DateTime())->format('Y-m-d H:i:s')])
+            ->andWhere(['<', 'mail_end_date', (new \DateTime())->sub(new \DateInterval('P7D'))->format('Y-m-d H:i:s')])
             ->orderBy(['priority' => SORT_DESC])
             ->one()
         ;

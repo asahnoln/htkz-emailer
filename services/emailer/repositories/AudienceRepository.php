@@ -1,20 +1,20 @@
 <?php
 
-namespace app\services\emailer\db;
+namespace app\services\emailer\repositories;
 
+use app\services\emailer\entities\SubscriberEntity;
 use app\services\emailer\interfaces\AudienceInterface;
-use app\services\emailer\Subscriber;
 use yii\db\Query;
 
 /**
  * Аудитория, хранимая в БД.
  */
-class DbAudience implements AudienceInterface
+class AudienceRepository implements AudienceInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function findAll(string $city): array
+    public function findAll(int $city): array
     {
         $items = (new Query())
             ->select(['m.id', 'm.email', 'mm.endDate'])
@@ -26,11 +26,7 @@ class DbAudience implements AudienceInterface
 
         $subs = [];
         foreach ($items as $item) {
-            if (strtotime($item['endDate'] ?? '') > strtotime('7 days ago')) {
-                continue;
-            }
-
-            $subs[] = new Subscriber($item['email'], $item['id']);
+            $subs[] = new SubscriberEntity($item['email'], $item['id']);
         }
 
         return $subs;

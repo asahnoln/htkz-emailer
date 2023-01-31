@@ -3,33 +3,31 @@
 namespace app\services\emailer;
 
 use app\services\emailer\interfaces\AnalyticsInterface;
-use app\services\emailer\interfaces\QueueStoreInterface;
 use yii\mail\MailerInterface;
 use yii\mail\MessageInterface;
 
+/**
+ * Отправщик писем и аналитики.
+ */
 class Emailer
 {
+    /**
+     * @param MailerInterface    $mailer    Объект, отправляющий письмо
+     * @param AnalyticsInterface $analytics Объект, отправляющий аналитику
+     */
     public function __construct(private MailerInterface $mailer, private AnalyticsInterface $analytics)
     {
     }
 
     /**
-     * @return bool
+     * Отправить письмо и сохранить аналитику.
+     *
+     * @param MessageInterface $message Сообщение письма
+     * @param string           $email   Почта
+     * @param string           $id      Идентикифактор для аналитики
+     *
+     * @return bool Отправлено ли письмо
      */
-    public function sendFromQueue(MessageInterface $message, QueueStoreInterface $queue): ?QueueMessage
-    {
-        if ($qm = $queue->receive()) {
-            // TODO: Check if title is too long? Could it be a problem?
-            $message->setSubject($qm->title);
-            $message->setTextBody($qm->content);
-            $qm->sent = $this->send($message, $qm->email, $qm->userId);
-
-            return $qm;
-        }
-
-        return null;
-    }
-
     public function send(MessageInterface $message, string $email, string $id): bool
     {
         $message->setTo($email);
