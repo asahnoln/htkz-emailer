@@ -53,7 +53,8 @@
         "post-create-project-cmd": [
             "yii\\composer\\Installer::postCreateProject",
             "yii\\composer\\Installer::postInstall"
-        ]
+        ],
+        "test": "codecept run"
     },
     "extra": {
         "yii\\composer\\Installer::postCreateProject": {
