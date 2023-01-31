@@ -2,9 +2,9 @@
 
 namespace app\services\emailer;
 
-use app\services\emailer\db\AudienceRepository;
-use app\services\emailer\db\CityRepository;
 use app\services\emailer\jobs\MailJob;
+use app\services\emailer\repositories\AudienceRepository;
+use app\services\emailer\repositories\CityRepository;
 use yii\queue\cli\Queue as CliQueue;
 
 class EmailerQueueService

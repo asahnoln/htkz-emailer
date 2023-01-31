@@ -2,8 +2,8 @@
 
 namespace tests\unit\services\emailer;
 
-use app\services\emailer\db\DbOffer;
 use app\services\emailer\interfaces\OfferInterface;
+use app\services\emailer\repositories\OfferRepository;
 use Codeception\Stub\Expected;
 use yii\httpclient\Client;
 use yii\httpclient\Request;
@@ -12,9 +12,9 @@ use yii\httpclient\Response;
 /**
  * @internal
  *
- * @covers \DbOffer
+ * @covers \OfferRepository
  */
-class DbOfferTest extends \Codeception\Test\Unit
+class OfferRepositoryTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
@@ -59,7 +59,7 @@ class DbOfferTest extends \Codeception\Test\Unit
             }),
         ]);
 
-        $o = new DbOffer($client, $url, 'secretToken');
+        $o = new OfferRepository($client, $url, 'secretToken');
 
         $result = $o->find('2');
 
@@ -70,7 +70,7 @@ class DbOfferTest extends \Codeception\Test\Unit
 
     public function testNoOfferFound(): void
     {
-        $o = new DbOffer($this->make(Client::class), 'test', 'token');
+        $o = new OfferRepository($this->make(Client::class), 'test', 'token');
         $result = $o->find('99999');
         verify($result)->null();
     }
@@ -97,7 +97,7 @@ class DbOfferTest extends \Codeception\Test\Unit
             }),
         ]);
 
-        $o = new DbOffer($client, 'test', 'token');
+        $o = new OfferRepository($client, 'test', 'token');
         $result = $o->find('2');
         verify($result)->null();
     }

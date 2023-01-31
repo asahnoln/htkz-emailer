@@ -1,6 +1,6 @@
 <?php
 
-namespace app\services\emailer\db;
+namespace app\services\emailer\repositories;
 
 use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\Subscriber;

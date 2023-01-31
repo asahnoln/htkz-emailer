@@ -7,7 +7,7 @@ use yii\console\ExitCode;
 
 class MailController extends \yii\console\Controller
 {
-    public function actionPush( ): int
+    public function actionPush(): int
     {
         (new EmailerQueueService())->push();
 

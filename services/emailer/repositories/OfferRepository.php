@@ -1,6 +1,6 @@
 <?php
 
-namespace app\services\emailer\db;
+namespace app\services\emailer\repositories;
 
 use app\services\emailer\interfaces\OfferInterface;
 use app\services\emailer\OfferMessage;
@@ -10,7 +10,7 @@ use yii\httpclient\Client;
 /**
  * Оффер, хранимый в БД и обращающийся к HT API за информацией о турах для составления текста письма.
  */
-class DbOffer implements OfferInterface
+class OfferRepository implements OfferInterface
 {
     /**
      * @param Client $client HTTP-клиент для запросов к HT API

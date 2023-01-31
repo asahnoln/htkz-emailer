@@ -1,6 +1,6 @@
 <?php
 
-namespace app\services\emailer\db;
+namespace app\services\emailer\repositories;
 
 /**
  * Аудитория, хранимая в БД.

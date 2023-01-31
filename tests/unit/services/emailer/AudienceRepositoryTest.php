@@ -2,8 +2,8 @@
 
 namespace tests\unit\services\emailer;
 
-use app\services\emailer\db\AudienceRepository;
 use app\services\emailer\interfaces\AudienceInterface;
+use app\services\emailer\repositories\AudienceRepository;
 use app\services\emailer\Subscriber;
 
 /**

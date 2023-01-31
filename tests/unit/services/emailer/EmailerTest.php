@@ -20,7 +20,7 @@ class EmailerTest extends \Codeception\Test\Unit
     protected $tester;
 
     // tests
-    public function testSendFromQueue(): void
+    public function testSend(): void
     {
         $m = new MailerSpy();
         $a = new \AnalyticsStub();
@@ -54,12 +54,6 @@ class EmailerTest extends \Codeception\Test\Unit
     protected function _after(): void
     {
     }
-
-    // public function testEmailerInjection(): void
-    // {
-    //     $e = Yii::$container->get(Emailer::class);
-    //     verify($e)->notNull();
-    // }
 }
 
 class MailerSpy implements MailerInterface
