@@ -46,7 +46,7 @@ cp .env.example .env
 - [x] Логику перенести в сервис
 - [ ] Datetime для дат
 - [x] Repository для работы с БД
-- [ ] Entity название для сущностей
+- [x] Entity название для сущностей
 - [ ] Offer check for week
 - [x] string city -> int
 - [ ] Use payload instead of plain content
@@ -84,11 +84,11 @@ docker-compose run --rm php vendor/bin/codecept run
 
 Сервис рассылки, который получает письма из очереди и шлет их клиентам.
 
-### Subscriber
+### SubscriberEntity
 
 Подписчик на рассылку из аудитории.
 
-### OfferMessage
+### OfferEntity
 
 Сообщение оффера (заголовок, текст).
 
@@ -114,7 +114,7 @@ docker-compose run --rm php vendor/bin/codecept run
 
 Аудитория, которой нужно рассылать письма. Находится по городу.
 
-#### app\services\emailer\db\AudienceRepository
+#### app\services\emailer\repositories\AudienceRepository
 
 Аудитория, хранимая в БД.
 
@@ -122,7 +122,7 @@ docker-compose run --rm php vendor/bin/codecept run
 
 Оффер для рассылки аудитории. Находится по городу.
 
-#### app\services\emailer\db\DbOffer
+#### app\services\emailer\repositories\OfferRepository
 
 Оффер, хранимый в БД и обращающийся к HT API за информацией о турах для составления текста письма.
 

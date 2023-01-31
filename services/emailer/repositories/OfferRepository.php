@@ -60,7 +60,7 @@ class OfferRepository implements OfferInterface
             ->select(['id', 'title', 'priority'])
             ->from('{{%post_original}}')
             ->where(['city_id' => $city, 'hidden_from_site' => 0])
-            ->andWhere(['>', 'endDate', date('Y-m-d H:i:s')])
+            ->andWhere(['>', 'endDate', (new \DateTime())->format('Y-m-d H:i:s')])
             ->orderBy(['priority' => SORT_DESC])
             ->one()
         ;
