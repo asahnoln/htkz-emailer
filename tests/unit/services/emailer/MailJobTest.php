@@ -3,6 +3,8 @@
 namespace tests\unit\services\emailer;
 
 use app\services\emailer\Emailer;
+use app\services\emailer\entities\OfferEntity;
+use app\services\emailer\entities\SubscriberEntity;
 use app\services\emailer\jobs\MailJob;
 
 /**
@@ -26,13 +28,17 @@ class MailJobTest extends \Codeception\Test\Unit
         $m = new MailerSpy();
         $a = new \AnalyticsStub();
         $e = new Emailer($m, $a);
-        $mj = new MailJob($e, 'test@mail.com', '4');
+        $s = new SubscriberEntity('test@mail.com', 4);
+        $o = new OfferEntity('Great Thing', 'Great Body');
+        $mj = new MailJob($e, $s, $o);
 
         $q = new \QueueStub();
         $mj->execute($q);
 
         verify($m->sentMessages)->arrayCount(1);
         verify($m->sentMessages[0]->getTo())->arrayHasKey('test@mail.com');
+        verify($m->sentMessages[0]->getSubject())->equals('Great Thing');
+        verify($m->sentMessages[0]->getTextBody())->equals('Great Body');
         verify($a->ids[0])->equals('4');
 
         $msgs = \Yii::$app->db->createCommand('SELECT * FROM {{%mail_message}}')->queryAll();

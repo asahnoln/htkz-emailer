@@ -12,7 +12,7 @@ interface AudienceInterface
      *
      * @param int $city Город (идентификатор)
      *
-     * @return array<int,app\services\emailer\Subscriber>
+     * @return array<int,app\services\emailer\SubscriberEntity>
      */
     public function findAll(int $city): array;
 }

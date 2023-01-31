@@ -2,8 +2,8 @@
 
 namespace app\services\emailer\repositories;
 
+use app\services\emailer\entities\SubscriberEntity;
 use app\services\emailer\interfaces\AudienceInterface;
-use app\services\emailer\Subscriber;
 use yii\db\Query;
 
 /**
@@ -30,7 +30,7 @@ class AudienceRepository implements AudienceInterface
                 continue;
             }
 
-            $subs[] = new Subscriber($item['email'], $item['id']);
+            $subs[] = new SubscriberEntity($item['email'], $item['id']);
         }
 
         return $subs;

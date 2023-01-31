@@ -58,7 +58,7 @@ class EmailerTest extends \Codeception\Test\Unit
 
 class MailerSpy implements MailerInterface
 {
-    /** @var MessageInterface[] */
+    /** @var Message[] */
     public array $sentMessages = [];
 
     public function __construct(private bool $failing = false)

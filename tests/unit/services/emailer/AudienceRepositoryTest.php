@@ -2,9 +2,9 @@
 
 namespace tests\unit\services\emailer;
 
+use app\services\emailer\entities\SubscriberEntity;
 use app\services\emailer\interfaces\AudienceInterface;
 use app\services\emailer\repositories\AudienceRepository;
-use app\services\emailer\Subscriber;
 
 /**
  * @internal
@@ -64,7 +64,7 @@ class AudienceRepositoryTest extends \Codeception\Test\Unit
 
         verify($a)->instanceOf(AudienceInterface::class);
         verify($result)->arrayCount(3);
-        verify($result[0])->instanceOf(Subscriber::class);
+        verify($result[0])->instanceOf(SubscriberEntity::class);
         verify($result[0]->email)->equals('a@a.a');
         verify($result[0]->id)->equals(1);
     }

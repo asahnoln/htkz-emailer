@@ -1,11 +1,11 @@
 <?php
 
-namespace app\services\emailer;
+namespace app\services\emailer\entities;
 
 /**
  * Подписчик на рассылку из аудитории.
  */
-class Subscriber
+class SubscriberEntity
 {
     /**
      * @param string $email Email подписчика
