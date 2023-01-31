@@ -65,7 +65,11 @@ class OfferRepositoryTest extends \Codeception\Test\Unit
 
         verify($o)->instanceOf(OfferInterface::class);
         verify($result->title)->equals('test offer 2');
-        verify($result->content)->equals("good - 1\nbad - 10\nugly - 100");
+        verify($result->payload)->equals([
+            ['name' => 'good', 'price' => 1],
+            ['name' => 'bad', 'price' => 10],
+            ['name' => 'ugly', 'price' => 100],
+        ]);
     }
 
     public function testNoOfferFound(): void

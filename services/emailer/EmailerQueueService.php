@@ -34,7 +34,7 @@ class EmailerQueueService
 
             foreach ($ar->findAll($city['id']) as $sub) {
                 $this->queue->push(new MailJob($this->emailer, $sub, $offer));
-                $this->logToDb($sub->id, $offer->title, $offer->content);
+                $this->logToDb($sub->id, $offer->title, serialize($offer->payload));
             }
         }
     }

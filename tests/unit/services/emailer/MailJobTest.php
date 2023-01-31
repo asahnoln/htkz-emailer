@@ -29,7 +29,11 @@ class MailJobTest extends \Codeception\Test\Unit
         $a = new \AnalyticsStub();
         $e = new Emailer($m, $a);
         $s = new SubscriberEntity('test@mail.com', 4);
-        $o = new OfferEntity('Great Thing', 'Great Body');
+        $o = new OfferEntity('Great Thing', [
+            ['name' => 'good', 'price' => 10],
+            ['name' => 'bad', 'price' => 20],
+            ['name' => 'ugly', 'price' => 100],
+        ]);
         $mj = new MailJob($e, $s, $o);
 
         $q = new \QueueStub();
@@ -38,7 +42,7 @@ class MailJobTest extends \Codeception\Test\Unit
         verify($m->sentMessages)->arrayCount(1);
         verify($m->sentMessages[0]->getTo())->arrayHasKey('test@mail.com');
         verify($m->sentMessages[0]->getSubject())->equals('Great Thing');
-        verify($m->sentMessages[0]->getTextBody())->equals('Great Body');
+        verify($m->sentMessages[0]->getTextBody())->equals("good - 10\nbad - 20\nugly - 100");
         verify($a->ids[0])->equals('4');
 
         $msgs = \Yii::$app->db->createCommand('SELECT * FROM {{%mail_message}}')->queryAll();

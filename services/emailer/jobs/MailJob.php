@@ -6,7 +6,6 @@ use app\services\emailer\Emailer;
 use app\services\emailer\entities\OfferEntity;
 use app\services\emailer\entities\SubscriberEntity;
 use yii\queue\JobInterface;
-use yii\symfonymailer\Message;
 
 class MailJob implements JobInterface
 {
@@ -20,9 +19,8 @@ class MailJob implements JobInterface
 
     public function execute($queue): void
     {
-        $message = new Message();
+        $message = \Yii::$app->mailer->compose('offer', ['content' => $this->offer->payload]);
         $message->setSubject($this->offer->title);
-        $message->setTextBody($this->offer->content);
         $this->emailer->send($message, $this->sub->email, $this->sub->id);
         $this->changeLogState($this->sub->id);
     }

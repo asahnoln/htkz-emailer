@@ -9,9 +9,9 @@ class OfferEntity
 {
     /**
      * @param string $title   Заголовок письма
-     * @param string $content Содержимое письма
+     * @param array  $payload Содержимое письма
      */
-    public function __construct(public string $title, public string $content)
+    public function __construct(public string $title, public array $payload)
     {
     }
 }

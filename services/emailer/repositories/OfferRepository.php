@@ -39,12 +39,15 @@ class OfferRepository implements OfferInterface
         }
 
         // TODO: Move out to a template
-        $content = [];
+        $payload = [];
         foreach ($data['tours'] as $tour) {
-            $content[] = "{$tour['hotel']['name']} - {$tour['price']['forTour']}";
+            $payload[] = [
+                'name' => $tour['hotel']['name'],
+                'price' => $tour['price']['forTour'],
+            ];
         }
 
-        return new OfferEntity($offer['title'], implode("\n", $content));
+        return new OfferEntity($offer['title'], $payload);
     }
 
     /**

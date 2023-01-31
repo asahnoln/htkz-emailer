@@ -44,7 +44,7 @@ cp .env.example .env
 
 - [x] Убрать из коснольной команды зависимости
 - [x] Логику перенести в сервис
-- [ ] Datetime для дат
+- [x] Datetime для дат
 - [x] Repository для работы с БД
 - [x] Entity название для сущностей
 - [ ] Offer check for week
