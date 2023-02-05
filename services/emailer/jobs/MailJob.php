@@ -3,6 +3,7 @@
 namespace app\services\emailer\jobs;
 
 use app\services\emailer\Emailer;
+use app\services\emailer\entities\MailMessage;
 use yii\queue\JobInterface;
 
 /**
@@ -20,7 +21,7 @@ class MailJob implements JobInterface
     /**
      * @param array<int,mixed> $offerPayload
      */
-    public function __construct(public string $subEmail, public int $subId, public string $offerTitle, public array $offerPayload)
+    public function __construct(public int $mailMessageId, public string $subEmail, public int $subId, public string $offerTitle, public array $offerPayload)
     {
         $this->emailer = \Yii::$container->get(Emailer::class);
     }
@@ -30,10 +31,14 @@ class MailJob implements JobInterface
      */
     public function execute($queue): void
     {
+        if (!$this->isMailMessageInProgress()) {
+            return;
+        }
+
         $message = \Yii::$app->mailer->compose('offer', ['content' => $this->offerPayload]);
         $message->setSubject($this->offerTitle);
         $this->emailer->send($message, $this->subEmail, $this->subId);
-        $this->changeLogState($this->subId);
+        $this->countMailMessageSent();
     }
 
     /**
@@ -41,18 +46,22 @@ class MailJob implements JobInterface
      *
      * @param int $mailId ID подписчика
      */
-    public function changeLogState(int $mailId): void
+    public function countMailMessageSent(): void
     {
-        $result = \Yii::$app->db->createCommand()
-            ->update(
-                '{{%mail_message}}',
-                [
-                    'state' => static::STATE_DONE,
-                    'send_count' => 1,
-                ],
-                'state = :state'
-            )->bindValues([
-                ':state' => static::STATE_CREATED,
+        $result = \Yii::$app->db
+            ->createCommand('UPDATE {{%mail_message}} SET send_count = send_count + 1 WHERE id = :id')
+            ->bindValues([
+                ':id' => $this->mailMessageId,
             ])->execute();
+    }
+
+    protected function isMailMessageInProgress(): bool
+    {
+        return \Yii::$app->db
+            ->createCommand('SELECT COUNT(*) FROM {{%mail_message}} WHERE id = :id AND state = :state')
+            ->bindValues([
+                ':id' => $this->mailMessageId,
+                ':state' => MailMessage::STATE_INPROGRESS,
+            ])->queryScalar() > 0;
     }
 }

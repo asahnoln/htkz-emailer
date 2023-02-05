@@ -67,7 +67,7 @@ class MailQueueTest extends \Codeception\Test\Unit
         verify($msgs[0]['title'])->equals('test offer 5');
         verify($msgs[0]['content'])->stringContainsString('good');
         verify($msgs[0]['site'])->equals(1);
-        verify($msgs[0]['state'])->equals(0);
+        verify($msgs[0]['state'])->equals(1);
         verify($msgs[0]['is_sending'])->equals(0);
         verify($msgs[0]['chunk_sending_started_at'])->equals('1970-01-01 00:00:00');
         verify($msgs[0]['send_count'])->equals(0);

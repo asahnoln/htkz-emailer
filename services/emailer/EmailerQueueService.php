@@ -2,6 +2,7 @@
 
 namespace app\services\emailer;
 
+use app\services\emailer\entities\MailMessage;
 use app\services\emailer\interfaces\OfferInterface;
 use app\services\emailer\jobs\MailJob;
 use app\services\emailer\repositories\AudienceRepository;
@@ -36,9 +37,9 @@ class EmailerQueueService
                 return;
             }
 
-            $this->createMailMessage($offer->title, serialize($offer->payload));
+            $id = $this->createMailMessage($offer->title, serialize($offer->payload));
             foreach ($ar->findAll($city['id']) as $sub) {
-                $this->queue->push(new MailJob($sub->email, $sub->id, $offer->title, $offer->payload));
+                $this->queue->push(new MailJob($id, $sub->email, $sub->id, $offer->title, $offer->payload));
             }
         }
     }
@@ -50,15 +51,16 @@ class EmailerQueueService
      * @param string $title   Заголовок письма
      * @param string $content Контент письма
      */
-    protected function createMailMessage(string $title, string $content): void
+    protected function createMailMessage(string $title, string $content): int
     {
         $date = (new \DateTime())->format('Y-m-d H:i:s');
-        \Yii::$app->db->createCommand()->insert('{{%mail_message}}', [
+
+        return \Yii::$app->db->createCommand()->insert('{{%mail_message}}', [
             'title' => $title,
             'titleBig' => $title,
             'content' => $content,
             'site' => 1,
-            'state' => 0,
+            'state' => MailMessage::STATE_INPROGRESS,
             'is_sending' => 0,
             'chunk_sending_started_at' => '1970-01-01 00:00:00',
             'send_count' => 0,
