@@ -47,7 +47,7 @@ cp .env.example .env
 ## TODO
 
 - [ ] Как менять state в mail_message?
-- [ ] Заменить логгирование mail_message на mail_send
+- [ ] Добавить логгирование в mail_send
 - [x] mail_message.state - проверять на отправку джобы
 - [x] mail_message использовать как объект содержащий письмо для рассылки
 - [x] MailJob - заменить объекты простые значения
