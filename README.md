@@ -48,6 +48,7 @@ cp .env.example .env
 
 - [ ] Как менять state в mail_message?
 - [ ] Добавить логгирование в mail_send
+- [ ] Не создавать mail_message для offer, для которого уже был создан mail_message
 - [x] mail_message.state - проверять на отправку джобы
 - [x] mail_message использовать как объект содержащий письмо для рассылки
 - [x] MailJob - заменить объекты простые значения
