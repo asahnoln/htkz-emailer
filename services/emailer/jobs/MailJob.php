@@ -3,8 +3,6 @@
 namespace app\services\emailer\jobs;
 
 use app\services\emailer\Emailer;
-use app\services\emailer\entities\OfferEntity;
-use app\services\emailer\entities\SubscriberEntity;
 use yii\queue\JobInterface;
 
 /**
@@ -17,13 +15,14 @@ class MailJob implements JobInterface
     public const STATE_INPROGRESS = 1;
     public const STATE_DONE = 2;
 
+    private Emailer $emailer;
+
     /**
-     * @param Emailer          $emailer Отправщик письма и аналитики
-     * @param SubscriberEntity $sub     Подписчик
-     * @param OfferEntity      $offer   Оффер
+     * @param array<int,mixed> $offerPayload
      */
-    public function __construct(private Emailer $emailer, private SubscriberEntity $sub, private OfferEntity $offer)
+    public function __construct(private string $subEmail, private int $subId, private string $offerTitle, private array $offerPayload)
     {
+        $this->emailer = \Yii::$container->get(Emailer::class);
     }
 
     /**
@@ -31,10 +30,10 @@ class MailJob implements JobInterface
      */
     public function execute($queue): void
     {
-        $message = \Yii::$app->mailer->compose('offer', ['content' => $this->offer->payload]);
-        $message->setSubject($this->offer->title);
-        $this->emailer->send($message, $this->sub->email, $this->sub->id);
-        $this->changeLogState($this->sub->id);
+        $message = \Yii::$app->mailer->compose('offer', ['content' => $this->offerPayload]);
+        $message->setSubject($this->offerTitle);
+        $this->emailer->send($message, $this->subEmail, $this->subId);
+        $this->changeLogState($this->subId);
     }
 
     /**

@@ -23,7 +23,6 @@ class MailJobTest extends \Codeception\Test\Unit
     public function testSendsMail(): void
     {
         $this->createMails();
-        $msgs = \Yii::$app->db->createCommand('SELECT * FROM {{%mail_message}}')->queryAll();
 
         $mailSpy = new MailerSpy();
         $analytics = new \AnalyticsStub();
@@ -35,7 +34,10 @@ class MailJobTest extends \Codeception\Test\Unit
             ['name' => 'ugly', 'price' => 100],
         ]);
 
-        $mj = new MailJob($emailer, $sub, $off);
+        \Yii::$container->setSingletons([
+            Emailer::class => fn () => $emailer,
+        ]);
+        $mj = new MailJob($sub->email, $sub->id, $off->title, $off->payload);
 
         $q = new \QueueStub();
         $mj->execute($q);

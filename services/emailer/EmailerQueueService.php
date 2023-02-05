@@ -13,13 +13,11 @@ use yii\queue\cli\Queue as CliQueue;
  */
 class EmailerQueueService
 {
-    private Emailer $emailer;
     private CliQueue $queue;
     private OfferInterface $offer;
 
     public function __construct()
     {
-        $this->emailer = \Yii::$container->get(Emailer::class);
         $this->queue = \Yii::$container->get(CliQueue::class);
         $this->offer = \Yii::$container->get(OfferInterface::class);
     }
@@ -39,7 +37,7 @@ class EmailerQueueService
             }
 
             foreach ($ar->findAll($city['id']) as $sub) {
-                $this->queue->push(new MailJob($this->emailer, $sub, $offer));
+                $this->queue->push(new MailJob($sub->email, $sub->id, $offer->title, $offer->payload));
                 $this->logToDb($sub->id, $offer->title, serialize($offer->payload));
             }
         }
