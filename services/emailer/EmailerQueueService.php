@@ -31,7 +31,7 @@ class EmailerQueueService
         $ar = new AudienceRepository();
 
         foreach ($cities as $city) {
-            $offer = $this->offer->find($city['id']);
+            $offer = $this->offer->findByCity($city['id']);
             if (!$offer) {
                 return;
             }

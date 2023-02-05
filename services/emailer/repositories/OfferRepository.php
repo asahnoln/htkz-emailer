@@ -24,7 +24,7 @@ class OfferRepository implements OfferInterface
     /**
      * {@inheritdoc}
      */
-    public function find(int $city): ?OfferEntity
+    public function findByCity(int $city): ?OfferEntity
     {
         $offer = $this->findOffer($city);
         if (!$offer) {

@@ -16,5 +16,5 @@ interface OfferInterface
      *
      * @return ?OfferEntity Сообщение оффера или null
      */
-    public function find(int $city): ?OfferEntity;
+    public function findByCity(int $city): ?OfferEntity;
 }

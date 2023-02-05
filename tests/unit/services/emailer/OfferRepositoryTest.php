@@ -61,7 +61,7 @@ class OfferRepositoryTest extends \Codeception\Test\Unit
 
         $o = new OfferRepository($client, $url, 'secretToken');
 
-        $result = $o->find('2');
+        $result = $o->findByCity('2');
 
         verify($o)->instanceOf(OfferInterface::class);
         verify($result->title)->equals('test offer 2');
@@ -75,7 +75,7 @@ class OfferRepositoryTest extends \Codeception\Test\Unit
     public function testNoOfferFound(): void
     {
         $o = new OfferRepository($this->make(Client::class), 'test', 'token');
-        $result = $o->find('99999');
+        $result = $o->findByCity('99999');
         verify($result)->null();
     }
 
@@ -102,7 +102,7 @@ class OfferRepositoryTest extends \Codeception\Test\Unit
         ]);
 
         $o = new OfferRepository($client, 'test', 'token');
-        $result = $o->find('2');
+        $result = $o->findByCity('2');
         verify($result)->null();
     }
 

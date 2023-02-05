@@ -9,7 +9,9 @@ use app\services\emailer\repositories\OfferRepository;
 use yii\di\Instance;
 use yii\httpclient\Client;
 use yii\mail\MailerInterface;
+use yii\mail\MessageInterface;
 use yii\symfonymailer\Mailer;
+use yii\symfonymailer\Message;
 
 $params = require __DIR__.'/params.php';
 $db = require __DIR__.'/db.php';
@@ -47,7 +49,6 @@ $config = [
     ],
     'container' => [
         'definitions' => [
-            // Emailer::class => Emailer::class,
             // CliQueue::class => [
             //     'class' => Queue::class,
             //     'driver' => Queue::ENQUEUE_AMQP_LIB,
@@ -61,7 +62,6 @@ $config = [
                     $_ENV['API_KEY'],
                 ],
             ],
-            // QueueStoreInterface::class => DbQueueStore::class,
             MailerInterface::class => [
                 'class' => Mailer::class,
                 'transport' => [
@@ -85,7 +85,6 @@ $config = [
             Emailer::class => [
                 'class' => Emailer::class,
                 '__construct()' => [
-                    // Instance::of(AudienceInterface::class),
                     Instance::of(MailerInterface::class),
                     Instance::of(AnalyticsInterface::class),
                 ],

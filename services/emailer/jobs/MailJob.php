@@ -20,7 +20,7 @@ class MailJob implements JobInterface
     /**
      * @param array<int,mixed> $offerPayload
      */
-    public function __construct(private string $subEmail, private int $subId, private string $offerTitle, private array $offerPayload)
+    public function __construct(public string $subEmail, public int $subId, public string $offerTitle, public array $offerPayload)
     {
         $this->emailer = \Yii::$container->get(Emailer::class);
     }
