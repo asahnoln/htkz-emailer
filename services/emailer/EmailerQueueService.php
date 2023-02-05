@@ -36,9 +36,9 @@ class EmailerQueueService
                 return;
             }
 
+            $this->createMailMessage($offer->title, serialize($offer->payload));
             foreach ($ar->findAll($city['id']) as $sub) {
                 $this->queue->push(new MailJob($sub->email, $sub->id, $offer->title, $offer->payload));
-                $this->logToDb($sub->id, $offer->title, serialize($offer->payload));
             }
         }
     }
@@ -50,11 +50,10 @@ class EmailerQueueService
      * @param string $title   Заголовок письма
      * @param string $content Контент письма
      */
-    protected function logToDb(int $mailId, string $title, string $content): void
+    protected function createMailMessage(string $title, string $content): void
     {
         $date = (new \DateTime())->format('Y-m-d H:i:s');
         \Yii::$app->db->createCommand()->insert('{{%mail_message}}', [
-            'mail_id' => $mailId,
             'title' => $title,
             'titleBig' => $title,
             'content' => $content,

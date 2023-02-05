@@ -17,9 +17,8 @@ class AudienceRepository implements AudienceInterface
     public function findAll(int $city): array
     {
         $items = (new Query())
-            ->select(['m.id', 'm.email', 'mm.endDate'])
+            ->select(['m.id', 'm.email'])
             ->from('{{%mail}} m')
-            ->leftJoin('{{%mail_message}} mm', 'm.id = mm.mail_id')
             ->where(['city' => $city, 'active' => 1, 'del' => 0])
             ->all()
         ;

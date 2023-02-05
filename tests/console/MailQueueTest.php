@@ -44,6 +44,7 @@ class MailQueueTest extends \Codeception\Test\Unit
                 'useFileTransport' => true,
                 'messageClass' => 'yii\symfonymailer\Message',
             ],
+            // TODO: Only change http client for testing, don't change the whole class
             OfferInterface::class => [
                 'class' => OfferRepository::class,
                 '__construct()' => [
@@ -62,24 +63,24 @@ class MailQueueTest extends \Codeception\Test\Unit
 
         $testDate = (new \DateTime())->format('Y-m-d H:i:s');
         $msgs = \Yii::$app->db->createCommand('SELECT * FROM {{%mail_message}}')->queryAll();
-        verify($msgs)->arrayCount(8); // Already existing mail_messages plus new ones
-        verify($msgs[3]['title'])->equals('test offer 5');
-        verify($msgs[3]['content'])->stringContainsString('good');
-        verify($msgs[3]['site'])->equals(1);
-        verify($msgs[3]['state'])->equals(0);
-        verify($msgs[3]['is_sending'])->equals(0);
-        verify($msgs[3]['chunk_sending_started_at'])->equals('1970-01-01 00:00:00');
-        verify($msgs[3]['send_count'])->equals(0);
-        verify($msgs[3]['error_count'])->equals(0);
-        verify($msgs[3]['read_count'])->equals(0);
-        verify($msgs[3]['site_visit_count'])->equals(0);
-        verify($msgs[3]['previewEmail'])->equals('');
-        verify($msgs[3]['addDate'])->equals($testDate);
-        verify($msgs[3]['activationDate'])->equals('1970-01-01 00:00:00');
-        verify($msgs[3]['startDate'])->equals($testDate);
-        verify($msgs[3]['endDate'])->equals($testDate);
-        verify($msgs[3]['custom_file'])->equals('');
-        verify($msgs[3]['activationToken'])->equals('');
+        verify($msgs)->arrayCount(2); // One mail_message for one offer
+        verify($msgs[0]['title'])->equals('test offer 5');
+        verify($msgs[0]['content'])->stringContainsString('good');
+        verify($msgs[0]['site'])->equals(1);
+        verify($msgs[0]['state'])->equals(0);
+        verify($msgs[0]['is_sending'])->equals(0);
+        verify($msgs[0]['chunk_sending_started_at'])->equals('1970-01-01 00:00:00');
+        verify($msgs[0]['send_count'])->equals(0);
+        verify($msgs[0]['error_count'])->equals(0);
+        verify($msgs[0]['read_count'])->equals(0);
+        verify($msgs[0]['site_visit_count'])->equals(0);
+        verify($msgs[0]['previewEmail'])->equals('');
+        verify($msgs[0]['addDate'])->equals($testDate);
+        verify($msgs[0]['activationDate'])->equals('1970-01-01 00:00:00');
+        verify($msgs[0]['startDate'])->equals($testDate);
+        verify($msgs[0]['endDate'])->equals($testDate);
+        verify($msgs[0]['custom_file'])->equals('');
+        verify($msgs[0]['activationToken'])->equals('');
     }
 
     protected function createMails(): void
@@ -103,19 +104,19 @@ class MailQueueTest extends \Codeception\Test\Unit
             ->execute()
         ;
 
-        \Yii::$app->db->createCommand()
-            ->batchInsert(
-                '{{%mail_message}}',
-                ['mail_id', 'title', 'titleBig', 'content', 'site', 'state', 'is_sending', 'chunk_sending_started_at', 'send_count', 'error_count', 'read_count', 'site_visit_count', 'previewEmail', 'addDate', 'activationDate', 'startDate', 'endDate', 'custom_file', 'activationToken',
-                ],
-                [
-                    [7, 'mail test', 'mail test', 'mail content', 1, 0, 0, '1970-01-01 00:00:00', 0, 0, 0, 0, '', date('Y-m-d H:i:s'), '1970-01-01 00:00:00', date('Y-m-d H:i:s'), date('Y-m-d H:i:s', strtotime('5 days ago')), '', ''],
-                    [1, 'mail test', 'mail test', 'mail content', 1, 0, 0, '1970-01-01 00:00:00', 0, 0, 0, 0, '', date('Y-m-d H:i:s'), '1970-01-01 00:00:00', date('Y-m-d H:i:s'), date('Y-m-d H:i:s', strtotime('8 days ago')), '', ''],
-                    [2, 'mail test', 'mail test', 'mail content', 1, 0, 0, '1970-01-01 00:00:00', 0, 0, 0, 0, '', date('Y-m-d H:i:s'), '1970-01-01 00:00:00', date('Y-m-d H:i:s'), date('Y-m-d H:i:s', strtotime('7 days ago')), '', ''],
-                ]
-            )
-            ->execute()
-        ;
+        // \Yii::$app->db->createCommand()
+        //     ->batchInsert(
+        //         '{{%mail_message}}',
+        //         ['mail_id', 'title', 'titleBig', 'content', 'site', 'state', 'is_sending', 'chunk_sending_started_at', 'send_count', 'error_count', 'read_count', 'site_visit_count', 'previewEmail', 'addDate', 'activationDate', 'startDate', 'endDate', 'custom_file', 'activationToken',
+        //         ],
+        //         [
+        //             [7, 'mail test', 'mail test', 'mail content', 1, 0, 0, '1970-01-01 00:00:00', 0, 0, 0, 0, '', date('Y-m-d H:i:s'), '1970-01-01 00:00:00', date('Y-m-d H:i:s'), date('Y-m-d H:i:s', strtotime('5 days ago')), '', ''],
+        //             [1, 'mail test', 'mail test', 'mail content', 1, 0, 0, '1970-01-01 00:00:00', 0, 0, 0, 0, '', date('Y-m-d H:i:s'), '1970-01-01 00:00:00', date('Y-m-d H:i:s'), date('Y-m-d H:i:s', strtotime('8 days ago')), '', ''],
+        //             [2, 'mail test', 'mail test', 'mail content', 1, 0, 0, '1970-01-01 00:00:00', 0, 0, 0, 0, '', date('Y-m-d H:i:s'), '1970-01-01 00:00:00', date('Y-m-d H:i:s'), date('Y-m-d H:i:s', strtotime('7 days ago')), '', ''],
+        //         ]
+        //     )
+        //     ->execute()
+        // ;
     }
 
     protected function createOffers(): void

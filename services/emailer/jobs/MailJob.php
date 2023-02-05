@@ -50,9 +50,8 @@ class MailJob implements JobInterface
                     'state' => static::STATE_DONE,
                     'send_count' => 1,
                 ],
-                'mail_id = :mail_id and state = :state'
+                'state = :state'
             )->bindValues([
-                ':mail_id' => $mailId,
                 ':state' => static::STATE_CREATED,
             ])->execute();
     }
